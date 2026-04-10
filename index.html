@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>GG84 – Home sicura</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0b0b0b">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="GG84">
+  <meta name="mobile-web-app-capable" content="yes">
+  <link rel="apple-touch-icon" href="icon-192.png">
+
+  <script>
+    (function () {
+      try {
+        document.documentElement.style.visibility = "hidden";
+
+        const introDone = localStorage.getItem("gg84_intro_done") === "1";
+        const onboardingDone = localStorage.getItem("gg84_onboarding_done") === "1";
+
+        const storedName =
+          localStorage.getItem("gg84_user_name") ||
+          localStorage.getItem("gg84_username") ||
+          "";
+
+        const storedPub =
+          localStorage.getItem("gg84_public") ||
+          localStorage.getItem("gg84_public_identity") ||
+          "";
+
+        const storedPriv =
+          localStorage.getItem("gg84_private") ||
+          localStorage.getItem("gg84_private_jwk") ||
+          "";
+
+        const hasIdentity = !!String(storedName).trim() && !!String(storedPub).trim() && !!String(storedPriv).trim();
+
+        let target = "";
+        if (!introDone) {
+          target = "intro.html";
+        } else if (!hasIdentity) {
+          target = "intro.html";
+        } else if (!onboardingDone) {
+          target = "setup.html";
+        }
+
+        if (target) {
+          location.replace(target);
+          return;
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+          document.documentElement.style.visibility = "visible";
+        });
+      } catch (error) {
+        document.addEventListener("DOMContentLoaded", function () {
+          document.documentElement.style.visibility = "visible";
+        });
+      }
+    })();
+  </script>
+
+  <style>
+    :root {
+      --bg: #f4f4f2;
+      --panel-solid: #ffffff;
+      --text: #111111;
+      --muted: #5f5f5f;
+      --shadow: 0 8px 18px rgba(0, 0, 0, 0.06);
+
+      --green-main: #39e75f;
+      --green-soft: #eefaf0;
+      --green-line: rgba(27, 152, 63, 0.26);
+
+      --amber-main: #f2a91b;
+      --amber-soft: #fff5df;
+      --amber-line: rgba(218, 148, 19, 0.30);
+
+      --red-main: #d94b4b;
+      --red-soft: #fff0f0;
+      --red-line: rgba(217, 75, 75, 0.28);
+
+      --share-soft: #eef4ff;
+      --share-icon: #dfe9ff;
+
+      --private-soft: #f6efe7;
+      --private-icon: #ebdfd1;
+
+      --identity-soft: #eef2f6;
+      --identity-icon: #e2e8f0;
+
+      --pro-soft: #f7f0cf;
+      --pro-icon: #efe4ac;
+
+      --transition: 0.18s ease;
+      --safe-top: env(safe-area-inset-top, 0px);
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Poppins, Arial, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+      overflow-x: hidden;
+    }
+
+    body {
+      min-height: 100vh;
+      padding-top: calc(var(--safe-top) + 12px);
+      position: relative;
+      background:
+        radial-gradient(circle at top center, rgba(57, 231, 95, 0.08) 0%, rgba(57, 231, 95, 0.02) 22%, rgba(0, 0, 0, 0) 44%),
+        var(--bg);
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: calc(var(--safe-top) + 8px);
+      background: #000000;
+      z-index: 999;
+      pointer-events: none;
+    }
+
+    .shell {
+      width: 100%;
+      max-width: 430px;
+      margin: 0 auto;
+      padding: 10px 14px 18px;
+    }
+
+    .intro-screen {
+      position: fixed;
+      inset: 0;
+      background: #000000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      opacity: 1;
+      visibility: visible;
+      transition: opacity 0.45s ease, visibility 0.45s ease;
+    }
+
+    .intro-screen.hide {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    .intro-content {
+      text-align: center;
+      transform: translateY(-6px);
+    }
+
+    .intro-logo {
+      width: 102px;
+      height: 102px;
+      object-fit: contain;
+      display: block;
+      margin: 0 auto 12px;
+    }
+
+    .intro-brand {
+      color: #ffffff;
+      font-size: 1.35rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+    }
+
+    .hero-wrap {
+      position: relative;
+      margin-bottom: 12px;
+    }
+
+    .hero-wrap::before {
+      content: "";
+      position: absolute;
+      inset: -14px;
+      background:
+        radial-gradient(circle at 50% 2%, rgba(57, 231, 95, 0.22) 0%, rgba(57, 231, 95, 0.10) 21%, rgba(0, 0, 0, 0) 50%);
+      filter: blur(14px);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .hero {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.78);
+      border: 1px solid rgba(17, 17, 17, 0.09);
+      border-radius: 28px;
+      padding: 18px 16px 16px;
+      box-shadow:
+        0 10px 24px rgba(0, 0, 0, 0.06),
+        inset 0 1px 0 rgba(255, 255, 255, 0.52);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    .hero-logo-wrap {
+      width: 150px;
+      height: 150px;
+      border-radius: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background:
+        radial-gradient(circle at 50% 46%, rgba(57, 231, 95, 0.10), rgba(57, 231, 95, 0.04) 60%, rgba(57, 231, 95, 0.02) 100%);
+      box-shadow:
+        0 14px 30px rgba(57, 231, 95, 0.11),
+        inset 0 1px 0 rgba(255,255,255,0.45);
+      margin-bottom: 2px;
+      overflow: hidden;
+    }
+
+    .hero-logo {
+      width: 106px;
+      height: 106px;
+      object-fit: contain;
+      display: block;
+      border-radius: 26px;
+    }
+
+    .hero-title {
+      margin: 2px 0 0;
+      font-size: 1.2rem;
+      line-height: 1.14;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      color: #111111;
+    }
+
+    .hero-protocol {
+      margin: 0;
+      font-size: 0.73rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #525252;
+    }
+
+    .hero-subtitle {
+      margin: 2px 0 0;
+      font-size: 0.84rem;
+      line-height: 1.35;
+      color: #5e5e5e;
+    }
+
+    .actions-grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .action-card,
+    .action-card-button {
+      width: 100%;
+      border-radius: 28px;
+      border: 2px solid rgba(17,17,17,0.08);
+      background: rgba(255,255,255,0.88);
+      padding: 18px 18px 16px;
+      box-shadow: var(--shadow);
+      transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition), background var(--transition), opacity var(--transition);
+    }
+
+    .action-card-button {
+      appearance: none;
+      -webkit-appearance: none;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .action-card-button.clickable:hover,
+    .action-card.clickable:hover {
+      transform: translateY(-1px);
+      box-shadow:
+        0 12px 22px rgba(0,0,0,0.07),
+        0 0 0 1.5px rgba(57, 231, 95, 0.55),
+        0 0 18px rgba(57, 231, 95, 0.20);
+    }
+
+    .action-card-button.disabled {
+      opacity: 0.72;
+      cursor: default;
+    }
+
+    .card-connection-red {
+      background: linear-gradient(180deg, rgba(255,240,240,0.98), rgba(248,243,243,0.92));
+      border-color: var(--red-line);
+    }
+
+    .card-connection-amber {
+      background: linear-gradient(180deg, rgba(255,245,223,0.98), rgba(248,244,235,0.92));
+      border-color: var(--amber-line);
+    }
+
+    .card-connection-green {
+      background: linear-gradient(180deg, rgba(238,250,240,0.98), rgba(240,246,240,0.92));
+      border-color: var(--green-line);
+    }
+
+    .card-messages {
+      background: linear-gradient(180deg, rgba(238,244,255,0.98), rgba(241,243,250,0.92));
+      border-color: rgba(110, 137, 210, 0.35);
+    }
+
+    .card-private {
+      background: linear-gradient(180deg, rgba(246,239,231,0.98), rgba(242,239,236,0.92));
+      border-color: rgba(107, 84, 58, 0.32);
+    }
+
+    .card-identity {
+      background: linear-gradient(180deg, rgba(238,242,246,0.98), rgba(241,243,246,0.92));
+      border-color: rgba(125, 135, 150, 0.34);
+    }
+
+    .card-pro {
+      background: linear-gradient(180deg, rgba(247,240,207,0.98), rgba(240,236,214,0.92));
+      border-color: rgba(163, 148, 68, 0.34);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .pro-badge {
+      position: absolute;
+      top: 10px;
+      right: 12px;
+      font-size: 0.65rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      color: #715d09;
+      background: rgba(255,255,255,0.56);
+      border: 1px solid rgba(163, 148, 68, 0.22);
+      padding: 4px 8px;
+      border-radius: 999px;
+    }
+
+    .card-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .card-icon {
+      width: 70px;
+      height: 70px;
+      border-radius: 22px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(17,17,17,0.05);
+    }
+
+    .icon-connection { background: linear-gradient(180deg, #f6f6f4, #ececea); }
+    .icon-messages { background: var(--share-icon); }
+    .icon-private { background: var(--private-icon); }
+    .icon-identity { background: var(--identity-icon); }
+    .icon-pro { background: var(--pro-icon); }
+
+    .card-content {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .card-title {
+      margin: 0 0 4px;
+      font-size: 0.98rem;
+      line-height: 1.2;
+      font-weight: 900;
+      color: #111111;
+      letter-spacing: -0.01em;
+    }
+
+    .card-subtitle {
+      margin: 0;
+      font-size: 0.78rem;
+      line-height: 1.4;
+      color: #555555;
+    }
+
+    .card-helper {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 10px;
+      font-size: 0.74rem;
+      font-weight: 800;
+      color: #555555;
+    }
+
+    .card-helper-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      background: rgba(90,90,90,0.65);
+    }
+
+    .dot-red { background: var(--red-main); }
+    .dot-amber { background: var(--amber-main); }
+    .dot-green { background: var(--green-main); }
+    .dot-gray { background: rgba(90,90,90,0.65); }
+
+    .dynamic-area {
+      margin-top: 14px;
+    }
+
+    .inline-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .mini-btn {
+      min-height: 44px;
+      padding: 0 18px;
+      border-radius: 999px;
+      border: 2px solid rgba(17,17,17,0.14);
+      background: rgba(255,255,255,0.88);
+      color: #151515;
+      font-size: 0.82rem;
+      font-weight: 900;
+      cursor: pointer;
+      transition: transform var(--transition), box-shadow var(--transition), background var(--transition), border-color var(--transition), color var(--transition), opacity var(--transition);
+      box-shadow: 0 6px 14px rgba(0,0,0,0.04);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .mini-btn:hover {
+      transform: translateY(-1px);
+      border-color: rgba(57, 231, 95, 0.75);
+      box-shadow:
+        0 10px 18px rgba(0,0,0,0.08),
+        0 0 0 1.5px rgba(57, 231, 95, 0.55),
+        0 0 18px rgba(57, 231, 95, 0.22);
+    }
+    .mini-btn:focus-visible {
+      outline: none;
+      border-color: rgba(57, 231, 95, 0.75);
+      box-shadow:
+        0 10px 18px rgba(0,0,0,0.08),
+        0 0 0 2px rgba(57, 231, 95, 0.55),
+        0 0 20px rgba(57, 231, 95, 0.24);
+    }
+    .mini-btn:active { transform: translateY(0); }
+
+    .mini-btn.primary {
+      background: linear-gradient(180deg, rgba(57,231,95,0.98), rgba(39,215,74,0.96));
+      border-color: rgba(22,140,55,0.18);
+      color: #06210d;
+      box-shadow:
+        0 10px 18px rgba(57,231,95,0.18),
+        0 0 16px rgba(57,231,95,0.14);
+    }
+
+    .mini-btn.ghost {
+      background: rgba(255,255,255,0.72);
+    }
+
+    .mini-btn.danger-soft {
+      background: rgba(255, 241, 241, 0.96);
+      border-color: rgba(176, 0, 32, 0.28);
+      color: #8a1834;
+    }
+
+    .mini-btn.danger-soft:hover {
+      background: rgba(255, 232, 232, 1);
+      border-color: rgba(176, 0, 32, 0.38);
+    }
+
+    .traffic-mini {
+      width: 28px;
+      height: 44px;
+      border-radius: 12px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(244,244,242,0.92));
+      border: 1px solid rgba(17,17,17,0.08);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      position: absolute;
+      left: 13px;
+      top: 13px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
+    }
+
+    .traffic-mini-light {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      opacity: 0.22;
+    }
+
+    .light-red { background: #d94b4b; }
+    .light-amber { background: #f2a91b; }
+    .light-green { background: #39e75f; }
+
+    .traffic-mini.red .light-red { opacity: 1; }
+    .traffic-mini.amber .light-amber { opacity: 1; }
+    .traffic-mini.green .light-green { opacity: 1; }
+
+    .lock-open {
+      position: absolute;
+      right: 6px;
+      bottom: 10px;
+      font-size: 1.65rem;
+      line-height: 1;
+    }
+
+    .social-btn {
+      width: 100%;
+      margin-top: 20px;
+      min-height: 76px;
+      border-radius: 28px;
+      border: 2px solid rgba(17,17,17,0.14);
+      background: rgba(255,255,255,0.68);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      font-size: 0.98rem;
+      font-weight: 900;
+      color: #111111;
+      cursor: pointer;
+      box-shadow: var(--shadow);
+      transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition), background var(--transition);
+    }
+
+    .social-btn:hover {
+      transform: translateY(-1px);
+      border-color: rgba(57, 231, 95, 0.75);
+      box-shadow:
+        0 12px 22px rgba(0,0,0,0.08),
+        0 0 0 1.5px rgba(57, 231, 95, 0.55),
+        0 0 18px rgba(57, 231, 95, 0.20);
+    }
+
+    .social-btn:focus-visible {
+      outline: none;
+      border-color: rgba(57, 231, 95, 0.75);
+      box-shadow:
+        0 12px 22px rgba(0,0,0,0.08),
+        0 0 0 2px rgba(57, 231, 95, 0.55),
+        0 0 20px rgba(57, 231, 95, 0.22);
+    }
+
+    .ig-icon {
+      width: 30px;
+      height: 30px;
+      flex-shrink: 0;
+    }
+
+    .version {
+      margin-top: 14px;
+      text-align: center;
+      font-size: 0.64rem;
+      color: #9a9a9a;
+      letter-spacing: 0.08em;
+      opacity: 0.88;
+    }
+
+    @media (max-width: 390px) {
+      .shell {
+        padding-left: 12px;
+        padding-right: 12px;
+      }
+
+      .hero-logo-wrap {
+        width: 132px;
+        height: 132px;
+      }
+
+      .hero-logo {
+        width: 94px;
+        height: 94px;
+      }
+
+      .hero-title {
+        font-size: 1.08rem;
+      }
+
+      .card-row {
+        align-items: flex-start;
+      }
+
+      .card-icon {
+        width: 64px;
+        height: 64px;
+      }
+
+      .inline-actions {
+        flex-direction: column;
+      }
+
+      .mini-btn {
+        width: 100%;
+      }
+
+      .card-subtitle {
+        font-size: 0.77rem;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="gg84_ux.css">
+</head>
+
+<body>
+  <div id="intro-screen" class="intro-screen">
+    <div class="intro-content">
+      <img src="logo3.png" alt="GG84" class="intro-logo">
+      <div class="intro-brand">GG84</div>
+    </div>
+  </div>
+
+  <main class="shell">
+    <div class="hero-wrap">
+      <section class="hero">
+        <div class="hero-logo-wrap">
+          <img src="logo3.png" alt="GG84 Logo" class="hero-logo">
+        </div>
+
+        <div class="hero-copy">
+          <h1 id="welcomeText" class="hero-title">Benvenuto</h1>
+          <p class="hero-protocol">GG84-SPP · Secure Private Protocol</p>
+          <p class="hero-subtitle">Two identities. Nothing else.</p>
+        </div>
+      </section>
+    </div>
+
+    <section class="actions-grid">
+      <div id="connectionCard" class="action-card card-connection-red base clickable" onclick="goToConnection()">
+        <div class="card-row">
+          <div class="card-icon icon-connection">
+            <div id="connectionTraffic" class="traffic-mini red">
+              <div class="traffic-mini-light light-red"></div>
+              <div class="traffic-mini-light light-amber"></div>
+              <div class="traffic-mini-light light-green"></div>
+            </div>
+            <div id="connectionUnlock" class="lock-open">🔓</div>
+          </div>
+
+          <div class="card-content">
+            <p id="connectionCardTitle" class="card-title">Collega una persona</p>
+            <p id="connectionCardSubtitle" class="card-subtitle">Inizia il collegamento protetto.</p>
+            <div id="connectionHelper" class="card-helper">
+              <span class="card-helper-dot dot-red"></span>
+              Nessuna persona collegata
+            </div>
+          </div>
+        </div>
+
+        <div id="dynamicConnectionArea" class="dynamic-area">
+          <div class="inline-actions">
+            <button type="button" class="mini-btn" onclick="goToConnectionFromButton(event)">Apri collegamento</button>
+            <button id="verifyBtnHome" type="button" class="mini-btn primary" onclick="verifyCurrentPeerFromHome(event)">Conferma verifica</button>
+            <button id="disconnectBtnHome" type="button" class="mini-btn danger-soft" onclick="disconnectAndRestartFromHome(event)">Scollega</button>
+          </div>
+        </div>
+      </div>
+
+      <button id="communicationCard" type="button" class="action-card-button disabled" onclick="goToProtectedCommunication()">
+        <div class="card-row">
+          <div id="communicationIcon" class="card-icon icon-messages">💬</div>
+          <div class="card-content">
+            <p class="card-title">Messaggi protetti</p>
+            <p id="communicationSubtitle" class="card-subtitle">Disponibile dopo il collegamento.</p>
+            <div class="card-helper">
+              <span id="communicationDot" class="card-helper-dot dot-red"></span>
+              <span id="communicationHelperText">Messaggi cifrati</span>
+            </div>
+          </div>
+        </div>
+      </button>
+
+      <button type="button" class="action-card-button card-private clickable" onclick="location.href='cifra.html'">
+        <div class="card-row">
+          <div class="card-icon icon-private">🗂️</div>
+          <div class="card-content">
+            <p class="card-title">Proteggi per te</p>
+            <p class="card-subtitle">Cifra e apri note personali sul tuo dispositivo.</p>
+            <div class="card-helper">
+              <span class="card-helper-dot dot-green"></span>
+              Protezione locale sempre disponibile
+            </div>
+          </div>
+        </div>
+      </button>
+
+      <button id="identityCard" type="button" class="action-card-button card-identity clickable" onclick="goToIdentityArea()">
+        <div class="card-row">
+          <div class="card-icon icon-identity">👤</div>
+          <div class="card-content">
+            <p class="card-title">La tua identità</p>
+            <p class="card-subtitle">Nome, invito personale e impostazioni essenziali.</p>
+            <div id="identityStateHelper" class="card-helper">
+              <span id="identityStateDot" class="card-helper-dot dot-red"></span>
+              <span id="identityStateText">Crea identità per usare GG84 SPP</span>
+            </div>
+          </div>
+        </div>
+      </button>
+
+      <button type="button" class="action-card-button card-pro clickable" onclick="location.href='pro.html'">
+        <span class="pro-badge">PRO</span>
+        <div class="card-row">
+          <div class="card-icon icon-pro">📁</div>
+          <div class="card-content">
+            <p class="card-title">Proteggi file e foto</p>
+            <p class="card-subtitle">Evoluzione futura per contenuti avanzati.</p>
+            <div class="card-helper">
+              <span class="card-helper-dot dot-amber"></span>
+              In progettazione
+            </div>
+          </div>
+        </div>
+      </button>
+    </section>
+
+    <button class="social-btn" onclick="openInstagram()">
+      <svg class="ig-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <defs>
+          <linearGradient id="igGradient" x1="0%" y1="100%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#feda75"/>
+            <stop offset="28%" stop-color="#fa7e1e"/>
+            <stop offset="55%" stop-color="#d62976"/>
+            <stop offset="78%" stop-color="#962fbf"/>
+            <stop offset="100%" stop-color="#4f5bd5"/>
+          </linearGradient>
+        </defs>
+        <path fill="url(#igGradient)" d="M7.75 2h8.5C19.99 2 22 4.01 22 6.75v8.5C22 19.99 19.99 22 16.25 22h-8.5C4.01 22 2 19.99 2 16.25v-8.5C2 4.01 4.01 2 7.75 2zm0 2C5.68 4 4 5.68 4 7.75v8.5C4 18.32 5.68 20 7.75 20h8.5c2.07 0 3.75-1.68 3.75-3.75v-8.5C20 5.68 18.32 4 16.25 4h-8.5zm4.25 3.25A5 5 0 1 1 7 12a5 5 0 0 1 5-4.75zm0 2A3 3 0 1 0 15 12a3 3 0 0 0-3-2.75zm4.75-.88a1.13 1.13 0 1 1-1.13 1.13 1.13 1.13 0 0 1 1.13-1.13z"/>
+      </svg>
+      Scopri GG84
+    </button>
+
+    <div class="version">GG84_V.2_09.04.26</div>
+  </main>
+
+  <script src="script.js"></script>
+  <script src="gg84_ux.js"></script>
+  <script>
+    const welcomeText = document.getElementById("welcomeText");
+    const introScreen = document.getElementById("intro-screen");
+
+    const connectionCard = document.getElementById("connectionCard");
+    const connectionCardTitle = document.getElementById("connectionCardTitle");
+    const connectionCardSubtitle = document.getElementById("connectionCardSubtitle");
+    const connectionHelper = document.getElementById("connectionHelper");
+    const connectionTraffic = document.getElementById("connectionTraffic");
+    const connectionUnlock = document.getElementById("connectionUnlock");
+
+    const verifyBtnHome = document.getElementById("verifyBtnHome");
+    const disconnectBtnHome = document.getElementById("disconnectBtnHome");
+
+    const communicationCard = document.getElementById("communicationCard");
+    const communicationSubtitle = document.getElementById("communicationSubtitle");
+    const communicationDot = document.getElementById("communicationDot");
+    const communicationHelperText = document.getElementById("communicationHelperText");
+    const communicationIcon = document.getElementById("communicationIcon");
+
+    const identityCard = document.getElementById("identityCard");
+    const identityStateDot = document.getElementById("identityStateDot");
+    const identityStateText = document.getElementById("identityStateText");
+
+    function setIntroVisibility() {
+      introScreen.classList.add("hide");
+    }
+
+    function setWelcomeText() {
+      const name = (window.getUserName && getUserName()) || "";
+      welcomeText.textContent = name ? `Benvenuto, ${name}` : "Benvenuto";
+    }
+
+    function hasValidIdentityState() {
+      const name = (typeof getUserName === "function" ? getUserName() : "") || "";
+      const pub = (typeof getPublicIdentity === "function" ? getPublicIdentity() : "") || "";
+      const priv = (localStorage.getItem(GG84.storage.privateJwk) || "").trim();
+
+      return !!cleanString(name) && !!cleanString(pub) && !!priv;
+    }
+
+    function handleInitialRouting() {
+      const introDone = localStorage.getItem("gg84_intro_done") === "1";
+      const onboardingDone = localStorage.getItem("gg84_onboarding_done") === "1";
+      const hasIdentity = hasValidIdentityState();
+
+      if (!introDone) {
+        location.replace("intro.html");
+        return false;
+      }
+
+      if (!hasIdentity) {
+        location.replace("intro.html");
+        return false;
+      }
+
+      if (!onboardingDone) {
+        location.replace("setup.html");
+        return false;
+      }
+
+      return true;
+    }
+
+
+    function updateIdentityCardState() {
+      const ready = hasValidIdentityState();
+
+      identityStateDot.className = `card-helper-dot ${ready ? "dot-green" : "dot-red"}`;
+      identityStateText.textContent = ready
+        ? "Identità pronta"
+        : "Crea identità per usare GG84 SPP";
+
+      identityCard.classList.toggle("disabled", !ready);
+    }
+
+    function goToIdentityArea() {
+      if (hasValidIdentityState()) {
+        location.href = "identita.html";
+        return;
+      }
+
+      location.href = "intro.html";
+    }
+
+    function setTraffic(color) {
+      connectionTraffic.classList.remove("red", "amber", "green");
+      connectionTraffic.classList.add(color);
+    }
+
+    function setMessagesCardDisabled() {
+      communicationCard.classList.add("disabled");
+      communicationCard.classList.remove("card-messages");
+      communicationDot.className = "card-helper-dot dot-red";
+      communicationHelperText.textContent = "Messaggi cifrati";
+      communicationSubtitle.textContent = "Disponibile dopo il collegamento.";
+    }
+
+    function setMessagesCardEnabled(peerName = "") {
+      communicationCard.classList.remove("disabled");
+      communicationCard.classList.add("card-messages");
+      communicationDot.className = "card-helper-dot dot-green";
+      communicationHelperText.textContent = "Messaggi cifrati attivi";
+      communicationSubtitle.textContent = peerName
+        ? `Messaggi protetti con ${peerName}.`
+        : "Messaggi protetti attivi.";
+    }
+
+    function setConnectionCardTone(tone) {
+      connectionCard.classList.remove("card-connection-red", "card-connection-amber", "card-connection-green");
+      connectionCard.classList.add(`card-connection-${tone}`);
+    }
+
+    function setConnectionHelper(text, dotClass) {
+      connectionHelper.innerHTML = `<span class="card-helper-dot ${dotClass}"></span>${text}`;
+    }
+
+    function hasPendingConnectionState() {
+      const pendingPub = cleanString(localStorage.getItem(GG84.storage.pendingPeerPub) || "");
+      const pendingLink = cleanString(localStorage.getItem(GG84.storage.pendingApprovalLink) || "");
+      const flowState = cleanString(localStorage.getItem(GG84.storage.flowState) || "");
+      return !!pendingPub || !!pendingLink || flowState === "pending" || flowState === "receive" || flowState === "confirm";
+    }
+
+    function setConnectionStateDisconnected() {
+      connectionCardTitle.textContent = "Collega una persona";
+      connectionCardSubtitle.textContent = "Inizia il collegamento protetto.";
+      setConnectionHelper("Nessuna persona collegata", "dot-red");
+      connectionUnlock.textContent = "🔓";
+      setTraffic("red");
+      setConnectionCardTone("red");
+
+      verifyBtnHome.style.display = "none";
+      disconnectBtnHome.style.display = "none";
+
+      setMessagesCardDisabled();
+    }
+
+    function setConnectionStatePending() {
+      connectionCardTitle.textContent = "Collegamento in corso";
+      connectionCardSubtitle.textContent = "Invito inviato o ricevuto. Completa il collegamento.";
+      setConnectionHelper("In attesa di conferma", "dot-amber");
+      connectionUnlock.textContent = "🔓";
+      setTraffic("amber");
+      setConnectionCardTone("amber");
+
+      verifyBtnHome.style.display = "none";
+      disconnectBtnHome.style.display = "inline-flex";
+
+      setMessagesCardDisabled();
+    }
+
+    function setConnectionStateUnverified(activePeer) {
+      const peerName = activePeer.name || "Contatto";
+      connectionCardTitle.textContent = "Collegato";
+      connectionCardSubtitle.textContent = peerName;
+      setConnectionHelper("Connessione da verificare", "dot-amber");
+      connectionUnlock.textContent = "🔒";
+      setTraffic("amber");
+      setConnectionCardTone("amber");
+
+      verifyBtnHome.style.display = "inline-flex";
+      disconnectBtnHome.style.display = "inline-flex";
+
+      setMessagesCardEnabled(peerName);
+    }
+
+    async function setConnectionStateVerified(activePeer) {
+      const peerName = activePeer.name || "Contatto";
+      let fingerprint = "";
+
+      try {
+        fingerprint = await buildConnectionFingerprint(activePeer.pub);
+      } catch {}
+
+      connectionCardTitle.textContent = "Collegato";
+      connectionCardSubtitle.textContent = peerName;
+      setConnectionHelper(`Verificato${fingerprint ? " · " + fingerprint : ""}`, "dot-green");
+      connectionUnlock.textContent = "🔐";
+      setTraffic("green");
+      setConnectionCardTone("green");
+
+      verifyBtnHome.style.display = "none";
+      disconnectBtnHome.style.display = "inline-flex";
+
+      setMessagesCardEnabled(peerName);
+    }
+
+    async function renderHomeState() {
+      setWelcomeText();
+      updateIdentityCardState();
+
+      const activePeer = getActivePeer();
+      if (activePeer && activePeer.isActive) {
+        if (isActivePeerVerified()) {
+          await setConnectionStateVerified(activePeer);
+          return;
+        }
+
+        setConnectionStateUnverified(activePeer);
+        return;
+      }
+
+      if (hasPendingConnectionState()) {
+        setConnectionStatePending();
+        return;
+      }
+
+      setConnectionStateDisconnected();
+    }
+
+    function goToConnection() {
+      location.href = "chiave.html";
+    }
+
+    function goToConnectionFromButton(event) {
+      event.stopPropagation();
+      goToConnection();
+    }
+
+    function goToProtectedCommunication() {
+      const activePeer = getActivePeer();
+
+      if (!activePeer || !activePeer.isActive) {
+        if (window.GG84UX) {
+          GG84UX.error("Nessun collegamento attivo", "connectionCard");
+        }
+        return;
+      }
+
+      if (!isActivePeerVerified()) {
+        if (window.GG84UX) {
+          GG84UX.warning("Verifica prima il contatto", "connectionCard");
+        }
+        return;
+      }
+
+      if (window.GG84UX) {
+        GG84UX.success("Messaggi protetti attivi", "communicationCard");
+      }
+
+      location.href = "cifra_share.html";
+    }
+
+    function openInstagram() {
+      window.open("https://www.instagram.com/", "_blank", "noopener,noreferrer");
+    }
+
+    function applyStandaloneModeClass() {
+      const isStandalone =
+        (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches) ||
+        window.navigator.standalone === true;
+
+      document.body.classList.toggle("pwa-standalone", !!isStandalone);
+    }
+
+    async function verifyCurrentPeerFromHome(event) {
+      event.stopPropagation();
+
+      const activePeer = getActivePeer();
+      if (!activePeer || !activePeer.isActive) {
+        if (window.GG84UX) {
+          GG84UX.error("Nessun collegamento da verificare", "connectionCard");
+        }
+        return;
+      }
+
+      const ok = window.confirm(
+        "Hai verificato l’impronta con l’altra persona? Se confermi, il collegamento verrà segnato come verificato."
+      );
+      if (!ok) {
+        if (window.GG84UX) {
+          GG84UX.warning("Verifica annullata", "connectionCard");
+        }
+        return;
+      }
+
+      markActivePeerAsVerified();
+      await renderHomeState();
+
+      if (window.GG84UX) {
+        GG84UX.success("Contatto verificato", "connectionCard");
+      }
+    }
+
+    async function disconnectAndRestartFromHome(event) {
+      event.stopPropagation();
+
+      const ok = window.confirm(
+        "Vuoi scollegare questa persona? Il collegamento attivo o in attesa verrà rimosso."
+      );
+      if (!ok) {
+        if (window.GG84UX) {
+          GG84UX.warning("Disconnessione annullata", "connectionCard");
+        }
+        return;
+      }
+
+      clearCurrentConnection();
+      await renderHomeState();
+
+      if (window.GG84UX) {
+        GG84UX.warning("Collegamento rimosso", "connectionCard");
+      }
+    }
+
+    async function boot() {
+      try {
+        await initGG84();
+
+        if (!handleInitialRouting()) {
+          return;
+        }
+
+        document.documentElement.style.visibility = "visible";
+        applyStandaloneModeClass();
+        setIntroVisibility();
+        await renderHomeState();
+
+        const activePeer = getActivePeer();
+        if (window.GG84UX && activePeer && activePeer.isActive && isActivePeerVerified()) {
+          GG84UX.success("Connessione sicura attiva", "connectionCard");
+        }
+      } catch (error) {
+        console.error(error);
+
+        const canStayOnHome = handleInitialRouting();
+        if (!canStayOnHome) {
+          return;
+        }
+
+        document.documentElement.style.visibility = "visible";
+        applyStandaloneModeClass();
+        setIntroVisibility();
+        if (window.GG84UX) {
+          GG84UX.error("Errore inizializzazione home", "connectionCard");
+        }
+      }
+    }
+
+    setupAndroidBackNavigation();
+    boot();
+  </script>
+</body>
+</html>
