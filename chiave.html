@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>GG84 – Connessione Sicura</title>
+  <style>
+    :root{
+      --bg:#f4f4f2;--panel:#ffffff;--text:#111111;--muted:#5c5c5c;
+      --green:#39e75f;--green-soft:#eefaf0;--green-line:rgba(27,152,63,.22);
+      --blue-soft:#eef2f6;--blue-line:rgba(94,120,160,.18);
+      --warn-soft:#fff8ee;--warn-line:rgba(218,148,19,.28);
+      --danger-soft:#fff1f1;--danger-line:rgba(176,0,32,.22);
+      --shadow:0 10px 30px rgba(0,0,0,.08);--safe-top:env(safe-area-inset-top,0px);
+      --transition:.18s ease;
+    }
+    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:Poppins,Arial,sans-serif;overflow-x:hidden}
+    body{
+      min-height:100vh;
+      padding-top:calc(var(--safe-top) + 8px);
+      position:relative;
+      background:
+        radial-gradient(circle at top center, rgba(57,231,95,.08) 0%, rgba(57,231,95,.02) 22%, rgba(0,0,0,0) 44%),
+        var(--bg);
+    }
+    body::before{content:"";position:fixed;top:0;left:0;right:0;height:calc(var(--safe-top) + 8px);background:#000;z-index:999;pointer-events:none}
+    .shell{width:100%;max-width:420px;margin:auto;padding:12px 14px 24px}
+    .header{padding:8px 0 14px;text-align:center}
+    .header-logo{width:54px;height:54px;border-radius:14px;object-fit:contain;display:inline-block;box-shadow:0 8px 18px rgba(0,0,0,.08)}
+    .hero-copy{text-align:center;margin-bottom:10px}
+    .hero-title{margin:0;font-size:1.1rem;font-weight:800;line-height:1.15}
+    .hero-subtitle{margin:6px 0 0;font-size:.82rem;line-height:1.4;color:var(--muted)}
+    .step{display:none;animation:fadeUp .22s ease}
+    .step.show{display:block}
+    .card{background:var(--panel);border-radius:28px;padding:24px 18px;border:1px solid rgba(0,0,0,.04);box-shadow:var(--shadow);text-align:center}
+    .card.info{background:var(--blue-soft);border-color:var(--blue-line)}
+    .card.warning{background:var(--warn-soft);border-color:var(--warn-line)}
+    .card.danger{background:var(--danger-soft);border-color:var(--danger-line)}
+    .card.connected{background:var(--green-soft);border-color:var(--green-line)}
+    .card-title{margin:0 0 8px;font-size:1.2rem;font-weight:800;line-height:1.15}
+    .card-text{margin:0;font-size:.92rem;line-height:1.45;color:var(--muted)}
+    .action-grid{display:grid;gap:12px;margin-top:16px}
+    .action-btn{
+      width:100%;border:1px solid rgba(17,17,17,.08);border-radius:24px;background:#fff;padding:16px 14px;
+      text-align:center;box-shadow:0 12px 24px rgba(0,0,0,.05);cursor:pointer;
+      transition:transform var(--transition), box-shadow var(--transition), border-color var(--transition), opacity var(--transition);
+      color:#111;font-weight:800;font-size:.96rem;
+    }
+    .action-btn:hover{transform:translateY(-1px);box-shadow:0 16px 28px rgba(0,0,0,.07);border-color:rgba(17,17,17,.14)}
+    .action-btn.primary{background:#111;color:#fff;border-color:#111}
+    .action-btn.success{background:var(--green);border-color:rgba(27,152,63,.28)}
+    .action-btn.danger{background:#fff;border-color:rgba(176,0,32,.28)}
+    .badge{display:inline-flex;align-items:center;justify-content:center;min-height:30px;padding:6px 12px;border-radius:999px;background:rgba(17,17,17,.06);font-size:.72rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px}
+    .person-name{font-weight:900;color:#111}
+    .status{display:none;margin:0 0 12px;border-radius:18px;padding:12px 14px;font-size:.82rem;font-weight:700;line-height:1.45;box-shadow:var(--shadow)}
+    .status.show{display:block}
+    .status.ok{background:#eefaf0;border:1px solid rgba(27,152,63,.22);color:#1f6b3b}
+    .status.warn{background:#fff8ee;border:1px solid rgba(218,148,19,.28);color:#8a5a12}
+    .status.error{background:#fff1f1;border:1px solid rgba(176,0,32,.22);color:#8a1834}
+    .footer-tag{margin-top:14px;text-align:center;font-size:.74rem;font-weight:800;color:#6a6a6a}
+    .expiry-note{margin-top:12px;padding:10px 12px;border-radius:16px;background:rgba(255,241,241,0.96);border:1px solid rgba(176,0,32,.18);color:#a12828;font-size:.82rem;line-height:1.4;font-weight:800}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+  </style>
+
+  <!-- GG84 PWA iOS - GG84_V.2_14.04.26 -->
+  <meta name="theme-color" content="#0b0b0b">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="GG84">
+  <meta name="application-name" content="GG84">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="gg84-update-tag" content="GG84_V.2_14.04.26">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  <link rel="apple-touch-icon" sizes="167x167" href="apple-touch-icon-167.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="apple-touch-icon-152.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="apple-touch-icon-120.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+  <link rel="stylesheet" href="pwa-ios.css">
+</head>
+<body>
+  <div class="shell">
+    <div class="header">
+      <img src="logo3.png" alt="GG84" class="header-logo">
+    </div>
+
+    <div class="hero-copy">
+      <h1 class="hero-title">Connessione sicura</h1>
+      <p class="hero-subtitle">Scambio file GG84 guidato e semplice.</p>
+    </div>
+
+    <div id="status" class="status"></div>
+
+    <section id="step-remote-send" class="step">
+      <div class="card info">
+        <div class="badge">Invio invito</div>
+        <h2 class="card-title">Inoltra il file GG84</h2>
+        <p class="card-text">Dopo l’invio tornerai in Home con stato <span class="person-name">Connessione in attesa</span>.</p>
+        <div class="action-grid">
+          <button class="action-btn primary" id="btnSendInvite">Inoltra invito GG84</button>
+          <button class="action-btn" id="btnRemoteSendHome">Torna alla Home</button>
+        </div>
+        <div class="expiry-note">⚠️ Questo invito scade dopo circa 15 minuti.</div>
+      </div>
+      <div class="footer-tag">GG84_V3_25.04.26</div>
+    </section>
+
+    <section id="step-remote-receive" class="step">
+      <div class="card connected">
+        <div class="badge">Invito ricevuto</div>
+        <h2 class="card-title"><span id="receiveName">Una persona</span> vuole collegarsi con te</h2>
+        <p class="card-text">Se riconosci questa persona, premi <span class="person-name">Accetta</span>. GG84 preparerà il file di risposta.</p>
+        <div class="action-grid">
+          <button class="action-btn success" id="btnAcceptInvite">Accetta e invia risposta</button>
+          <button class="action-btn danger" id="btnRejectInvite">Non accetta</button>
+        </div>
+        <div class="expiry-note">⚠️ Questo invito scade dopo circa 15 minuti.</div>
+      </div>
+      <div class="footer-tag">GG84_V.2_16.04.26</div>
+    </section>
+
+    <section id="step-remote-send-back" class="step">
+      <div class="card connected">
+        <div class="badge">Risposta pronta</div>
+        <h2 class="card-title">Invia il file di risposta</h2>
+        <p class="card-text">Invia la risposta a <span id="sendBackName" class="person-name">questa persona</span>. Poi tornerai in Home.</p>
+        <div class="action-grid">
+          <button class="action-btn primary" id="btnSendBack">Invia risposta GG84</button>
+          <button class="action-btn" id="btnSendBackHome">Torna alla Home</button>
+        </div>
+        <div class="expiry-note">⚠️ Questo invito scade dopo circa 15 minuti.</div>
+      </div>
+      <div class="footer-tag">GG84_V.2_16.04.26</div>
+    </section>
+  </div>
+
+  <script src="script.js"></script>
+  <script src="gg84_ux.js"></script>
+  <script>
+    const STEPS = [
+      "step-remote-send",
+      "step-remote-receive",
+      "step-remote-send-back"
+    ];
+
+    const UI = {
+      step: "gg84_ui_step",
+      remoteInvite: "gg84_ui_remote_invite"
+    };
+
+    let currentInviteRaw = "";
+    let currentInviteData = null;
+    let hasCommittedFlow = false;
+
+    function toast(message, variant = "ok") {
+      try {
+        if (window.GG84UX && typeof window.GG84UX.toast === "function") {
+          window.GG84UX.toast(message, variant === "error" ? "error" : variant === "warn" ? "warn" : "ok");
+          return;
+        }
+      } catch {}
+      showStatus(message, variant);
+    }
+
+    function showStatus(message, variant = "ok") {
+      const el = document.getElementById("status");
+      if (!el) return;
+      el.className = `status show ${variant}`;
+      el.textContent = String(message || "");
+    }
+
+    function clearStatus() {
+      const el = document.getElementById("status");
+      if (!el) return;
+      el.className = "status";
+      el.textContent = "";
+    }
+
+    function setAcceptInviteBusy(isBusy) {
+      const btn = document.getElementById("btnAcceptInvite");
+      const rejectBtn = document.getElementById("btnRejectInvite");
+      if (!btn) return;
+      btn.disabled = !!isBusy;
+      btn.style.opacity = isBusy ? "0.72" : "1";
+      btn.style.cursor = isBusy ? "default" : "pointer";
+      btn.textContent = isBusy ? "Preparazione risposta..." : "Accetta e invia risposta";
+      if (rejectBtn) {
+        rejectBtn.disabled = !!isBusy;
+        rejectBtn.style.opacity = isBusy ? "0.72" : "1";
+        rejectBtn.style.cursor = isBusy ? "default" : "pointer";
+      }
+    }
+
+    function goStep(id) {
+      STEPS.forEach(stepId => {
+        const el = document.getElementById(stepId);
+        if (el) el.classList.toggle("show", stepId === id);
+      });
+      try { localStorage.setItem(UI.step, id); } catch {}
+      clearStatus();
+    }
+
+    function setReceiveName(name) {
+      const safe = cleanString(name) || "Una persona";
+      document.getElementById("receiveName").textContent = safe;
+      document.getElementById("sendBackName").textContent = safe;
+    }
+
+    function getStoredInviteRaw() {
+      return cleanString(localStorage.getItem(GG84.storage.pendingInviteFile) || localStorage.getItem(UI.remoteInvite) || "");
+    }
+
+    function persistInviteRaw(raw) {
+      const normalized = cleanString(raw);
+      currentInviteRaw = normalized;
+      try {
+        if (normalized) localStorage.setItem(UI.remoteInvite, normalized);
+        else localStorage.removeItem(UI.remoteInvite);
+      } catch {}
+    }
+
+    function clearRemoteTransientState() {
+      try { localStorage.removeItem(GG84.storage.flowState); } catch {}
+      try { localStorage.removeItem(GG84.storage.pendingInviteFile); } catch {}
+      try { localStorage.removeItem(GG84.storage.pendingConfirmFile); } catch {}
+      try { localStorage.removeItem(GG84.storage.pendingApprovalLink); } catch {}
+      try { localStorage.removeItem(GG84.storage.incomingPayload); } catch {}
+      try { localStorage.removeItem(UI.step); } catch {}
+      try { localStorage.removeItem(UI.remoteInvite); } catch {}
+      try { clearPendingPeer(); } catch {}
+      if (typeof clearUiFlowArtifacts === "function") {
+        try { clearUiFlowArtifacts(); } catch {}
+      }
+    }
+
+    function safeHome(options = {}) {
+      if (!options.keepState && !hasCommittedFlow) {
+        clearRemoteTransientState();
+      }
+      location.replace("index.html");
+    }
+
+    function forceReceiveFromRaw(raw) {
+      const parsed = parseInviteData(raw);
+      if (!parsed || parsed.flow !== "invite") return false;
+      currentInviteData = parsed;
+      persistInviteRaw(raw);
+      setReceiveName(parsed.name || "Una persona");
+      if (typeof saveUiFlowState === "function") {
+        saveUiFlowState("step-remote-receive", "invite", parsed.name || "", raw, "");
+      }
+      goStep("step-remote-receive");
+      return true;
+    }
+
+    async function processIncomingResult(result, sourceRaw = "") {
+      if (result && result.ok === false && result.errorMessage) {
+        showStatus(result.errorMessage, "error");
+        toast(result.errorMessage, "error");
+        return false;
+      }
+
+      if (!result || !result.ok) return false;
+
+      const personName = cleanString((result.data && result.data.name) || result.name || (result.peer && result.peer.name) || "Una persona");
+
+      if (result.flow === "invite" || result.mode === "invite") {
+        let inviteRaw = cleanString(sourceRaw || localStorage.getItem(GG84.storage.pendingInviteFile) || "");
+        if (!inviteRaw && result.data) {
+          try { inviteRaw = serializeGg84File(result.data); } catch {}
+        }
+        currentInviteData = result.data || result.peer || null;
+        persistInviteRaw(inviteRaw);
+        setReceiveName(personName);
+        if (typeof saveUiFlowState === "function") {
+          saveUiFlowState("step-remote-receive", "invite", personName, inviteRaw, "");
+        }
+        goStep("step-remote-receive");
+        toast(`Invito ricevuto da ${personName}.`, "ok");
+        return true;
+      }
+
+      if (result.flow === "confirm" || result.mode === "confirm") {
+        hasCommittedFlow = true;
+        try { clearUiFlowArtifacts(); } catch {}
+        try { localStorage.removeItem(UI.step); } catch {}
+        try { localStorage.removeItem(UI.remoteInvite); } catch {}
+        toast(`${personName} ha confermato la connessione.`, "ok");
+        safeHome({ keepState: true });
+        return true;
+      }
+
+      return false;
+    }
+
+    async function consumeAnyIncomingOnce() {
+      try {
+        const nativeResult = typeof consumeNativeIncomingStoredFile === "function" ? consumeNativeIncomingStoredFile() : null;
+        if (await processIncomingResult(nativeResult)) return true;
+
+        const incomingPayload = cleanString(localStorage.getItem(GG84.storage.incomingPayload) || "");
+        if (incomingPayload) {
+          let result = null;
+          let handledRaw = incomingPayload;
+
+          if (/\.gg84($|\?)/i.test(incomingPayload) && typeof handleIncomingFile === "function") {
+            result = await handleIncomingFile(incomingPayload);
+          } else if (typeof handleLinkPayload === "function") {
+            result = handleLinkPayload(incomingPayload);
+          }
+
+          if (await processIncomingResult(result, handledRaw)) {
+            localStorage.removeItem(GG84.storage.incomingPayload);
+            return true;
+          }
+        }
+
+        const storedInviteRaw = getStoredInviteRaw();
+        if (storedInviteRaw && forceReceiveFromRaw(storedInviteRaw)) return true;
+
+        return false;
+      } catch (error) {
+        console.error("consumeAnyIncomingOnce error", error);
+        return false;
+      }
+    }
+
+    async function waitForIncoming(maxMs = 2200, intervalMs = 150) {
+      const startedAt = Date.now();
+      do {
+        if (await consumeAnyIncomingOnce()) return true;
+        await new Promise(resolve => setTimeout(resolve, intervalMs));
+      } while (Date.now() - startedAt < maxMs);
+      return false;
+    }
+
+    function restoreExistingState() {
+      const active = getActivePeer();
+      if (active && active.isActive) {
+        safeHome({ keepState: true });
+        return true;
+      }
+
+      const storedInviteRaw = getStoredInviteRaw();
+      if (storedInviteRaw && forceReceiveFromRaw(storedInviteRaw)) {
+        return true;
+      }
+
+      const pending = getPendingPeer();
+      if (pending && pending.isPending) {
+        safeHome({ keepState: true });
+        return true;
+      }
+
+      return false;
+    }
+
+    async function boot() {
+      try {
+        await initGG84();
+      } catch (error) {
+        console.error(error);
+        showStatus("Impossibile inizializzare GG84.", "error");
+        return;
+      }
+
+      if (typeof setupIncomingFileListener === "function") {
+        try { setupIncomingFileListener(); } catch {}
+      }
+      if (typeof setupAndroidBackNavigation === "function") {
+        try { setupAndroidBackNavigation(); } catch {}
+      }
+
+      const queryInvite = parseInviteData(location.href);
+      if (queryInvite && queryInvite.flow === "invite") {
+        try {
+          setPendingPeer(queryInvite.pub, queryInvite.name, queryInvite.device || "");
+          localStorage.setItem(GG84.storage.flowState, "pending");
+          const raw = serializeGg84File({
+            v: queryInvite.v || GG84.file.version,
+            type: GG84.file.types.INVITE,
+            flow: "invite",
+            name: queryInvite.name || "Una persona",
+            pub: queryInvite.pub,
+            pairNonce: queryInvite.pairNonce || queryInvite.nonce || "",
+            ts: queryInvite.ts || Date.now(),
+            meta: { device: queryInvite.device || "mobile", app: GG84.file.appName }
+          });
+          localStorage.setItem(GG84.storage.pendingInviteFile, raw);
+          persistInviteRaw(raw);
+        } catch {}
+      }
+
+      const incomingHandled = await waitForIncoming(2200, 150);
+      if (incomingHandled) return;
+      if (restoreExistingState()) return;
+      goStep("step-remote-send");
+    }
+
+    async function sendInvite() {
+      try {
+        const result = await exportInviteGg84File();
+        if (!result || !result.ok || !result.raw) {
+          showStatus("Impossibile generare il file GG84.", "error");
+          return;
+        }
+
+        const raw = cleanString(result.raw);
+        if (raw) {
+          persistInviteRaw(raw);
+          localStorage.setItem(GG84.storage.pendingInviteFile, raw);
+          localStorage.setItem(GG84.storage.flowState, "pending");
+          hasCommittedFlow = true;
+          if (typeof saveUiFlowState === "function") {
+            saveUiFlowState("step-remote-send", "", "", raw, "");
+          }
+        }
+
+        safeHome({ keepState: true });
+      } catch (error) {
+        console.error(error);
+        showStatus("Impossibile generare il file GG84.", "error");
+      }
+    }
+
+    async function acceptInvite() {
+      const raw = currentInviteRaw || getStoredInviteRaw();
+      const parsed = parseInviteData(raw);
+      if (!parsed || parsed.flow !== "invite") {
+        showStatus("Invito GG84 non disponibile.", "error");
+        return;
+      }
+
+      if (!parsed.nonce || (typeof isValidPairNonce === "function" && !isValidPairNonce(parsed.nonce))) {
+        showStatus("Invito GG84 non valido o incompleto.", "error");
+        return;
+      }
+
+      currentInviteData = parsed;
+      persistInviteRaw(raw);
+      setReceiveName(parsed.name || "Una persona");
+      localStorage.setItem(GG84.storage.flowState, "pending");
+      if (typeof saveUiFlowState === "function") {
+        saveUiFlowState("step-remote-receive", "invite", parsed.name || "", raw, "");
+      }
+
+      setAcceptInviteBusy(true);
+      showStatus("GG84 sta preparando il file di risposta.", "ok");
+      toast("Risposta in preparazione…", "ok");
+
+      const sent = await sendBack({ fromOneTap: true });
+      if (!sent) {
+        setAcceptInviteBusy(false);
+      }
+    }
+
+    function rejectInvite() {
+      try { rejectPendingConnection(); } catch {}
+      clearRemoteTransientState();
+      safeHome();
+    }
+
+    async function sendBack(options = {}) {
+      try {
+        const raw = currentInviteRaw || getStoredInviteRaw();
+        const parsed = parseInviteData(raw);
+
+        if (!parsed || !parsed.pub || !parsed.nonce) {
+          showStatus("Invito GG84 non valido o incompleto.", "error");
+          return false;
+        }
+
+        const result = await exportConfirmGg84File(parsed);
+        if (!result || !result.ok) {
+          const message = options.fromOneTap
+            ? "Risposta non inviata. Puoi riprovare da questa schermata."
+            : "Impossibile generare il file di risposta.";
+          showStatus(message, options.fromOneTap ? "warn" : "error");
+          if (options.fromOneTap) {
+            toast(message, "warn");
+          }
+          return false;
+        }
+
+        if (parsed && parsed.pub) {
+          try {
+            setActivePeer(parsed.pub, parsed.name || "Contatto");
+          } catch {}
+        }
+
+        hasCommittedFlow = true;
+        try { clearPendingPeer(); } catch {}
+        try { localStorage.removeItem(GG84.storage.flowState); } catch {}
+        try { localStorage.removeItem(GG84.storage.pendingInviteFile); } catch {}
+        try { localStorage.removeItem(GG84.storage.pendingConfirmFile); } catch {}
+        try { localStorage.removeItem(GG84.storage.pendingApprovalLink); } catch {}
+        try { localStorage.removeItem(GG84.storage.incomingPayload); } catch {}
+        try { localStorage.removeItem(UI.step); } catch {}
+        try { localStorage.removeItem(UI.remoteInvite); } catch {}
+        if (typeof clearUiFlowArtifacts === "function") {
+          try { clearUiFlowArtifacts(); } catch {}
+        }
+
+        if (typeof saveUiFlowState === "function") {
+          saveUiFlowState("", "", "", "", "sent");
+        }
+
+        setTimeout(() => {
+          safeHome({ keepState: true });
+        }, 40);
+        return true;
+      } catch (error) {
+        console.error(error);
+        const message = options.fromOneTap
+          ? "Risposta non inviata. Puoi riprovare da questa schermata."
+          : "Impossibile generare il file di risposta.";
+        showStatus(message, options.fromOneTap ? "warn" : "error");
+        if (options.fromOneTap) {
+          toast(message, "warn");
+        }
+        return false;
+      }
+    }
+
+    document.getElementById("btnRemoteSendHome").addEventListener("click", () => safeHome());
+    document.getElementById("btnSendInvite").addEventListener("click", sendInvite);
+    document.getElementById("btnAcceptInvite").addEventListener("click", acceptInvite);
+    document.getElementById("btnRejectInvite").addEventListener("click", rejectInvite);
+    document.getElementById("btnSendBack").addEventListener("click", sendBack);
+    document.getElementById("btnSendBackHome").addEventListener("click", () => safeHome());
+
+    window.addEventListener("focus", () => { consumeAnyIncomingOnce(); });
+    document.addEventListener("visibilitychange", () => {
+      if (!document.hidden) consumeAnyIncomingOnce();
+    });
+
+    boot();
+  </script>
+
+<script src="pwa-install.js" defer></script>
+</body>
+</html>

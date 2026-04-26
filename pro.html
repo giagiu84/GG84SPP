@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>GG84 – PRO</title>
+
+  <style>
+    :root {
+      --bg-dark: #0b0d10;
+      --bg-dark-2: #13171c;
+      --panel: rgba(255,255,255,0.08);
+      --panel-strong: rgba(255,255,255,0.12);
+      --line: rgba(255,255,255,0.12);
+      --text: #f8fafc;
+      --muted: #b8c0cc;
+      --shadow: 0 20px 50px rgba(0,0,0,.32);
+      --shadow-soft: 0 12px 30px rgba(0,0,0,.20);
+
+      --green: #39e75f;
+      --green-2: #8cffab;
+      --gold: #f4d06f;
+      --gold-2: #ffe8a8;
+      --blue: #72b8ff;
+      --violet: #b79dff;
+      --rose: #ffc5d8;
+
+      --safe-top: env(safe-area-inset-top, 0px);
+      --transition: .24s ease;
+      --btn-height: 52px;
+    }
+
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      min-height: 100%;
+      overflow-x: hidden;
+      font-family: Poppins, Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(57,231,95,.16), rgba(57,231,95,0) 22%),
+        radial-gradient(circle at top right, rgba(114,184,255,.14), rgba(114,184,255,0) 24%),
+        radial-gradient(circle at 50% 120%, rgba(244,208,111,.10), rgba(244,208,111,0) 28%),
+        linear-gradient(180deg, var(--bg-dark) 0%, var(--bg-dark-2) 100%);
+    }
+
+    body {
+      padding-top: calc(var(--safe-top) + 12px);
+      position: relative;
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: calc(var(--safe-top) + 8px);
+      background: #000;
+      z-index: 999;
+      pointer-events: none;
+    }
+
+    .shell {
+      width: 100%;
+      max-width: 430px;
+      margin: 0 auto;
+      padding: 12px 14px 26px;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      border-radius: 34px;
+      padding: 18px 16px 16px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.06)),
+        rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.14);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      margin-bottom: 14px;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      right: -70px;
+      top: -60px;
+      width: 240px;
+      height: 240px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(57,231,95,.28), rgba(57,231,95,.06) 45%, rgba(0,0,0,0) 72%);
+      filter: blur(10px);
+      pointer-events: none;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      left: -80px;
+      bottom: -100px;
+      width: 240px;
+      height: 240px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(244,208,111,.18), rgba(244,208,111,.03) 42%, rgba(0,0,0,0) 72%);
+      filter: blur(10px);
+      pointer-events: none;
+    }
+
+    .hero-topline {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-badge {
+      display: flex;
+      margin: 0 auto;
+      align-items: center;
+      justify-content: center;
+      min-height: 34px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, rgba(255,232,168,.20), rgba(255,232,168,.08));
+      border: 1px solid rgba(244,208,111,.34);
+      box-shadow: 0 0 20px rgba(244,208,111,.10);
+      color: #fff3c3;
+      font-size: .92rem;
+      font-weight: 900;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+
+    .hero-mini {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: .68rem;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: #d9ffe3;
+      background: rgba(57,231,95,.10);
+      border: 1px solid rgba(57,231,95,.22);
+    }
+
+    .hero-progress-track {
+      position: relative;
+      z-index: 1;
+      height: 18px;
+      margin-bottom: 16px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.10);
+      overflow: hidden;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
+    }
+
+    .hero-progress {
+      height: 100%;
+      width: 78%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--green), var(--green-2), #d4ffe0);
+      box-shadow: 0 0 22px rgba(57,231,95,.48);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-progress::after {
+      content: "";
+      position: absolute;
+      top: -4px;
+      left: -25%;
+      width: 30%;
+      height: 26px;
+      background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,.95), rgba(255,255,255,0));
+      filter: blur(2px);
+      animation: sweep 2.2s linear infinite;
+    }
+
+    .hero-main {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 14px;
+      align-items: center;
+    }
+
+    .hero-copy h1 {
+      margin: 0;
+      font-size: 1.34rem;
+      line-height: 1.02;
+      letter-spacing: -.04em;
+      font-weight: 900;
+      color: #ffffff;
+    }
+
+    .hero-copy p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: .80rem;
+      line-height: 1.38;
+      max-width: 220px;
+    }
+
+    .hero-lock {
+      width: 102px;
+      height: 102px;
+      border-radius: 30px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.06));
+      border: 1px solid rgba(255,255,255,.16);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,.02),
+        0 16px 30px rgba(0,0,0,.18),
+        0 0 28px rgba(57,231,95,.10);
+    }
+
+    .hero-lock-logo {
+      width: 66px;
+      height: 66px;
+      object-fit: contain;
+      display: block;
+      filter: drop-shadow(0 10px 22px rgba(57,231,95,.24));
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 16px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .feature-card {
+      display: block;
+      text-decoration: none;
+      color: inherit;
+      min-height: 168px;
+      border-radius: 26px;
+      padding: 12px 10px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.06));
+      border: 1px solid rgba(255,255,255,.14);
+      box-shadow: var(--shadow-soft);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-2px) scale(1.01);
+      box-shadow: 0 16px 34px rgba(0,0,0,.26);
+    }
+
+    .feature-card::before {
+      content: "";
+      position: absolute;
+      inset: auto -18px -28px auto;
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      pointer-events: none;
+      opacity: .9;
+    }
+
+    .feature-card.green::before { background: radial-gradient(circle, rgba(57,231,95,.24), rgba(57,231,95,0) 72%); }
+    .feature-card.blue::before { background: radial-gradient(circle, rgba(114,184,255,.22), rgba(114,184,255,0) 72%); }
+    .feature-card.gold::before { background: radial-gradient(circle, rgba(244,208,111,.26), rgba(244,208,111,0) 72%); }
+
+    .feature-image {
+      width: 66px;
+      height: 66px;
+      margin: 0 auto 10px;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.16);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.10), 0 10px 20px rgba(0,0,0,.12);
+      font-size: 1.6rem;
+    }
+
+    .feature-image img {
+      width: 36px;
+      height: 36px;
+      object-fit: contain;
+      display: block;
+    }
+
+    .feature-card strong {
+      display: block;
+      font-size: .90rem;
+      line-height: 1.12;
+      margin-bottom: 6px;
+      font-weight: 800;
+      color: #ffffff;
+    }
+
+    .feature-card span {
+      display: block;
+      font-size: .70rem;
+      line-height: 1.32;
+      color: #d2dae5;
+    }
+
+    .stack {
+      display: grid;
+      gap: 12px;
+    }
+
+    .sales-card {
+      position: relative;
+      overflow: hidden;
+      border-radius: 26px;
+      padding: 14px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.05));
+      border: 1px solid rgba(255,255,255,.14);
+      box-shadow: var(--shadow-soft);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+    }
+
+    .sales-card::after {
+      content: "";
+      position: absolute;
+      top: -30px;
+      right: -26px;
+      width: 118px;
+      height: 118px;
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .sales-card.green::after { background: radial-gradient(circle, rgba(57,231,95,.18), rgba(57,231,95,0) 72%); }
+    .sales-card.blue::after { background: radial-gradient(circle, rgba(114,184,255,.16), rgba(114,184,255,0) 72%); }
+    .sales-card.gold::after { background: radial-gradient(circle, rgba(244,208,111,.20), rgba(244,208,111,0) 72%); }
+
+    .sales-top {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .sales-icon {
+      width: 58px;
+      height: 58px;
+      border-radius: 20px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,255,255,.10);
+      border: 1px solid rgba(255,255,255,.16);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.10), 0 8px 18px rgba(0,0,0,.12);
+      font-size: 1.35rem;
+      color: #ffffff;
+    }
+
+    .sales-icon img {
+      width: 35px;
+      height: 35px;
+      object-fit: contain;
+      display: block;
+    }
+
+    .sales-copy {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .sales-title {
+      margin: 0;
+      font-size: 1rem;
+      font-weight: 800;
+      line-height: 1.14;
+      color: #ffffff;
+    }
+
+    .sales-subtitle {
+      margin: 5px 0 0;
+      font-size: .78rem;
+      line-height: 1.34;
+      color: var(--muted);
+    }
+
+    .sales-bullets {
+      display: grid;
+      gap: 8px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .sales-bullet {
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+      font-size: .8rem;
+      line-height: 1.4;
+      color: #e5ebf3;
+    }
+
+    .sales-bullet-dot {
+      width: 8px;
+      height: 8px;
+      margin-top: 5px;
+      border-radius: 999px;
+      background: var(--green);
+      box-shadow: 0 0 12px rgba(57,231,95,.45);
+      flex-shrink: 0;
+    }
+
+    .lux-panel {
+      margin-top: 12px;
+      border-radius: 28px;
+      padding: 16px 14px;
+      text-align: center;
+      background:
+        radial-gradient(circle at top center, rgba(244,208,111,.20), rgba(244,208,111,.04) 28%, rgba(0,0,0,0) 52%),
+        linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.06));
+      border: 1px solid rgba(244,208,111,.24);
+      box-shadow: var(--shadow-soft);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+    }
+
+    .lux-title {
+      margin: 0;
+      font-size: 1.08rem;
+      line-height: 1.12;
+      font-weight: 900;
+      color: #fff6d6;
+    }
+
+    .lux-sub {
+      margin: 8px auto 0;
+      max-width: 290px;
+      color: #d6deea;
+      font-size: .78rem;
+      line-height: 1.36;
+    }
+
+    .premium-pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .premium-pill {
+      min-height: 34px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.10);
+      border: 1px solid rgba(255,255,255,.14);
+      font-size: .72rem;
+      font-weight: 800;
+      color: #f3f7fd;
+      box-shadow: 0 8px 18px rgba(0,0,0,.10);
+    }
+
+    .footer-nav {
+      margin-top: 14px;
+    }
+
+    .btn {
+      width: 100%;
+      min-height: var(--btn-height);
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.10);
+      color: #ffffff;
+      font-size: .94rem;
+      font-weight: 800;
+      font-family: inherit;
+      cursor: pointer;
+      box-shadow: var(--shadow-soft);
+      transition: transform var(--transition), box-shadow var(--transition), opacity var(--transition);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 16px 30px rgba(0,0,0,.22);
+    }
+
+    .btn.primary {
+      background: linear-gradient(180deg, rgba(244,208,111,.95), rgba(233,186,61,.92));
+      color: #211603;
+      border-color: rgba(244,208,111,.28);
+      box-shadow: 0 14px 28px rgba(244,208,111,.18);
+    }
+
+    .version {
+      margin-top: 10px;
+      text-align: center;
+      font-size: .67rem;
+      color: #8b95a4;
+      letter-spacing: .08em;
+    }
+
+    @keyframes sweep {
+      from { left: -30%; }
+      to { left: 100%; }
+    }
+
+    @media (max-width: 390px) {
+      .hero-main { grid-template-columns: 1fr; }
+      .hero-copy p { max-width: none; }
+      .hero-lock { margin: 0 auto; }
+      .feature-grid { grid-template-columns: 1fr; }
+    }
+
+    .click-card-link {
+      display: block;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .click-card-link:visited,
+    .click-card-link:hover,
+    .click-card-link:active {
+      color: inherit;
+      text-decoration: none;
+    }
+  </style>
+
+  <!-- GG84 PWA iOS - GG84_V.2_14.04.26 -->
+  <meta name="theme-color" content="#0b0b0b">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="GG84">
+  <meta name="application-name" content="GG84">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="gg84-update-tag" content="GG84_V.2_14.04.26">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  <link rel="apple-touch-icon" sizes="167x167" href="apple-touch-icon-167.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="apple-touch-icon-152.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="apple-touch-icon-120.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+  <link rel="stylesheet" href="pwa-ios.css">
+</head>
+<body>
+  <main class="shell">
+    <section class="hero">
+      <div class="hero-topline">
+        <div class="hero-badge">GG84 PRO</div>
+        </div>
+
+      <div class="hero-progress-track">
+        <div class="hero-progress"></div>
+      </div>
+
+      <div class="hero-main">
+        <div class="hero-copy">
+          <h1>Più esclusivo. Più potente. Più irresistibile.</h1>
+          <p>Un’estensione premium di GG84 pensata per i più esigenti della sicurezza!</p>
+        </div>
+
+        <div class="hero-lock">
+          <img src="logo3.png" alt="GG84" class="hero-lock-logo">
+        </div>
+      </div>
+
+      <div class="feature-grid">
+        <a class="feature-card green click-card-link" href="https://giagiu84.github.io/GG84-SecurePrivateProtocol/" target="_blank" rel="noopener">
+          <div class="feature-image"><img src="logo3.png" alt="GG84"></div>
+          <strong>Più contatti</strong>
+          <span>Rubrica protetta e più chat contemporanee!</span>
+        </a>
+
+        <a class="feature-card blue click-card-link" href="https://giagiu84.github.io/GG84-SecurePrivateProtocol/" target="_blank" rel="noopener">
+          <div class="feature-image">⚡</div>
+          <strong>Più rapidità</strong>
+          <span>Passaggio più fluido e rapido tra un contatto e l'altro!</span>
+        </a>
+
+        <a class="feature-card gold click-card-link" href="https://giagiu84.github.io/GG84-SecurePrivateProtocol/" target="_blank" rel="noopener">
+          <div class="feature-image">🛡️</div>
+          <strong>Protezione totale</strong>
+          <span>Foto, file e documenti protetti come i messaggi!</span>
+        </a>
+      </div>
+    </section>
+
+    <section class="stack">
+      <a class="click-card-link" href="https://giagiu84.github.io/GG84-SecurePrivateProtocol/" target="_blank" rel="noopener">
+        <article class="sales-card green">
+          <div class="sales-top">
+            <div class="sales-icon"><img src="logo3.png" alt="GG84"></div>
+            <div class="sales-copy">
+              <p class="sales-title">Rubrica contatti protetti</p>
+            </div>
+          </div>
+          <div class="sales-bullets">
+            <div class="sales-bullet"><span class="sales-bullet-dot"></span>Contatti GG84 dedicati</div>
+          </div>
+        </article>
+      </a>
+
+      <a class="click-card-link" href="https://giagiu84.github.io/GG84-SecurePrivateProtocol/" target="_blank" rel="noopener">
+        <article class="sales-card blue">
+          <div class="sales-top">
+            <div class="sales-icon">💬</div>
+            <div class="sales-copy">
+              <p class="sales-title">Switch rapido tra più conversazioni</p>
+            </div>
+          </div>
+          <div class="sales-bullets">
+            <div class="sales-bullet"><span class="sales-bullet-dot"></span>Cambio contatto immediato</div>
+            </div>
+        </article>
+      </a>
+
+      <a class="click-card-link" href="https://giagiu84.github.io/GG84-SecurePrivateProtocol/" target="_blank" rel="noopener">
+        <article class="sales-card gold">
+          <div class="sales-top">
+            <div class="sales-icon">📁</div>
+            <div class="sales-copy">
+              <p class="sales-title">Proteggi tutto</p>
+              <p class="sales-subtitle">Foto, file personali, PDF e documenti</p>
+            </div>
+          </div>
+          <div class="sales-bullets">
+            <div class="sales-bullet"><span class="sales-bullet-dot"></span>Contenuti sensibili al sicuro prima di essere inviati</div>
+            
+          </div>
+        </article>
+      </a>
+    </section>
+
+    <section class="lux-panel">
+      <p class="lux-title">Pensato per chi vuole di più</p>
+    </section>
+
+    <div class="footer-nav">
+      <button class="btn primary" onclick="location.href='index.html'">← Torna alla home</button>
+    </div>
+
+    <div class="version">GG84_PRO_22.04.26</div>
+  </main>
+
+  <script>
+    if (typeof setupAndroidBackNavigation === "function") {
+      setupAndroidBackNavigation();
+    }
+  </script>
+
+<script src="pwa-install.js" defer></script>
+</body>
+</html>

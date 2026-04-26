@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>GG84 – Tutorial</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#0b0b0b">
+
+  <style>
+    :root {
+      --bg: #f4f4f2;
+      --text: #101010;
+      --muted: #5f5f5f;
+      --green: #39e75f;
+      --green-dark: #1b983f;
+      --green-soft: rgba(57, 231, 95, 0.12);
+      --red: #d94b4b;
+      --amber: #f2a91b;
+      --panel: rgba(255,255,255,0.86);
+      --shadow: 0 18px 42px rgba(0,0,0,0.10);
+      --safe-top: env(safe-area-inset-top, 0px);
+      --transition: 0.18s ease;
+    }
+
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      min-height: 100%;
+      background:
+        radial-gradient(circle at top center, rgba(57,231,95,0.12) 0%, rgba(57,231,95,0.04) 30%, rgba(0,0,0,0) 58%),
+        var(--bg);
+      color: var(--text);
+      font-family: Poppins, Arial, sans-serif;
+      overflow-x: hidden;
+    }
+
+    body {
+      min-height: 100vh;
+      padding-top: calc(var(--safe-top) + 12px);
+      display: flex;
+      justify-content: center;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: calc(var(--safe-top) + 8px);
+      background: #000;
+      z-index: 999;
+      pointer-events: none;
+    }
+
+    .shell {
+      width: 100%;
+      max-width: 430px;
+      padding: 12px 14px 20px;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      border-radius: 30px;
+      background: rgba(255,255,255,0.78);
+      border: 1px solid rgba(17,17,17,0.08);
+      box-shadow: var(--shadow);
+      padding: 18px 16px;
+      text-align: center;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      margin-bottom: 12px;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: -35%;
+      background: radial-gradient(circle at 50% 40%, rgba(57,231,95,0.22), rgba(57,231,95,0.06) 35%, transparent 62%);
+      filter: blur(12px);
+      pointer-events: none;
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    .logo {
+      width: 72px;
+      height: 72px;
+      object-fit: contain;
+      border-radius: 20px;
+      filter: drop-shadow(0 10px 18px rgba(57,231,95,0.18));
+      margin-bottom: 8px;
+    }
+
+    .brand {
+      margin: 0;
+      font-size: 1.05rem;
+      font-weight: 950;
+      letter-spacing: 0.12em;
+    }
+
+    .brand-sub {
+      margin: 3px 0 0;
+      font-size: 0.62rem;
+      font-weight: 900;
+      color: #666;
+      letter-spacing: 0.16em;
+    }
+
+    .card {
+      position: relative;
+      overflow: hidden;
+      min-height: 540px;
+      border-radius: 32px;
+      background: rgba(255,255,255,0.88);
+      border: 1px solid rgba(17,17,17,0.08);
+      box-shadow: var(--shadow);
+      padding: 18px 16px 17px;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: -30%;
+      background:
+        radial-gradient(circle at 50% 15%, rgba(57,231,95,0.18), transparent 42%),
+        radial-gradient(circle at 20% 85%, rgba(80,120,255,0.08), transparent 36%);
+      pointer-events: none;
+    }
+
+    .step-top {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      min-height: 28px;
+      border-radius: 999px;
+      padding: 6px 11px;
+      background: rgba(57,231,95,0.13);
+      border: 1px solid rgba(27,152,63,0.18);
+      font-size: 0.68rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #1f6b3b;
+    }
+
+    .step-count {
+      font-size: 0.7rem;
+      font-weight: 900;
+      color: #777;
+      letter-spacing: 0.08em;
+    }
+
+    .animation-stage {
+      position: relative;
+      z-index: 1;
+      min-height: 218px;
+      border-radius: 26px;
+      background:
+        radial-gradient(circle at center, rgba(57,231,95,0.12), rgba(255,255,255,0.60) 55%, rgba(255,255,255,0.32));
+      border: 1px solid rgba(17,17,17,0.06);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      margin-bottom: 15px;
+    }
+
+    .animation-stage::before {
+      content: "";
+      position: absolute;
+      width: 230px;
+      height: 230px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(57,231,95,0.22), transparent 68%);
+      filter: blur(8px);
+      animation: pulseGlow 2.4s ease-in-out infinite alternate;
+    }
+
+    .scene {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      min-height: 190px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .phone {
+      width: 72px;
+      height: 118px;
+      border-radius: 22px;
+      background: linear-gradient(180deg, #151515, #050505);
+      border: 2px solid rgba(255,255,255,0.28);
+      box-shadow: 0 16px 28px rgba(0,0,0,0.18);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--green);
+      font-size: 1.45rem;
+      font-weight: 950;
+    }
+
+    .phone::before {
+      content: "";
+      position: absolute;
+      top: 8px;
+      width: 24px;
+      height: 4px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.28);
+    }
+
+    .phone-label {
+      position: absolute;
+      bottom: -24px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.7rem;
+      font-weight: 900;
+      color: #555;
+      white-space: nowrap;
+    }
+
+    .file-token {
+      width: 48px;
+      height: 60px;
+      border-radius: 12px;
+      background: linear-gradient(180deg, #39e75f, #20c947);
+      box-shadow:
+        0 10px 20px rgba(57,231,95,0.28),
+        inset 0 1px 0 rgba(255,255,255,0.42);
+      border: 1px solid rgba(27,152,63,0.20);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 950;
+      color: #06210d;
+      animation: fileFly 2s ease-in-out infinite;
+    }
+
+    .file-token::before {
+      content: ".gg84";
+      position: absolute;
+      bottom: 8px;
+      font-size: 0.58rem;
+      font-weight: 950;
+    }
+
+    .arrow-line {
+      width: 54px;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(57,231,95,0.95), transparent);
+      margin: 0 8px;
+      position: relative;
+    }
+
+    .arrow-line::after {
+      content: "";
+      position: absolute;
+      right: 2px;
+      top: -4px;
+      width: 9px;
+      height: 9px;
+      border-top: 2px solid rgba(57,231,95,0.95);
+      border-right: 2px solid rgba(57,231,95,0.95);
+      transform: rotate(45deg);
+    }
+
+    .choice-wrap {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      width: min(260px, 100%);
+    }
+
+    .choice {
+      min-height: 82px;
+      border-radius: 22px;
+      background: rgba(255,255,255,0.84);
+      border: 1px solid rgba(17,17,17,0.08);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 18px rgba(0,0,0,0.06);
+      animation: softFloat 1.8s ease-in-out infinite alternate;
+    }
+
+    .choice:nth-child(2) { animation-delay: 0.4s; }
+
+    .choice-icon {
+      font-size: 2rem;
+      line-height: 1;
+      margin-bottom: 7px;
+    }
+
+    .choice-text {
+      font-size: 0.78rem;
+      font-weight: 900;
+    }
+
+    .timer {
+      position: relative;
+      width: 128px;
+      height: 128px;
+      border-radius: 50%;
+      background:
+        conic-gradient(var(--green) 0 76%, rgba(17,17,17,0.08) 76% 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 16px 30px rgba(57,231,95,0.18);
+      animation: timerTick 2.4s ease-in-out infinite alternate;
+    }
+
+    .timer::before {
+      content: "";
+      position: absolute;
+      inset: 12px;
+      background: rgba(255,255,255,0.94);
+      border-radius: 50%;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.8);
+    }
+
+    .timer-inner {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+    }
+
+    .timer-value {
+      font-size: 1.55rem;
+      font-weight: 950;
+      color: #111;
+      line-height: 1;
+    }
+
+    .timer-label {
+      margin-top: 4px;
+      font-size: 0.65rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      color: #666;
+    }
+
+    .verify-pair {
+      display: grid;
+      gap: 12px;
+      width: min(286px, 100%);
+    }
+
+    .verify-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      border-radius: 22px;
+      background: rgba(255,255,255,0.82);
+      border: 1px solid rgba(17,17,17,0.08);
+      padding: 12px;
+      box-shadow: 0 10px 18px rgba(0,0,0,0.06);
+    }
+
+    .verify-phone {
+      font-size: 1.8rem;
+    }
+
+    .verify-chip {
+      min-width: 104px;
+      border-radius: 999px;
+      padding: 8px 12px;
+      background: rgba(57,231,95,0.16);
+      border: 1px solid rgba(27,152,63,0.18);
+      color: #1f6b3b;
+      font-weight: 950;
+      letter-spacing: 0.08em;
+      box-shadow: 0 0 16px rgba(57,231,95,0.18);
+    }
+
+    .speech-call {
+      position: absolute;
+      top: 24px;
+      right: 22px;
+      width: 54px;
+      height: 54px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.90);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 18px rgba(0,0,0,0.08);
+      animation: ringCall 1.2s ease-in-out infinite;
+      font-size: 1.45rem;
+    }
+
+    .cipher-box {
+      width: min(290px, 100%);
+      display: grid;
+      gap: 12px;
+    }
+
+    .plain, .cipher {
+      min-height: 54px;
+      border-radius: 18px;
+      padding: 13px 14px;
+      background: rgba(255,255,255,0.86);
+      border: 1px solid rgba(17,17,17,0.08);
+      font-size: 0.9rem;
+      font-weight: 850;
+      text-align: left;
+      box-shadow: 0 10px 18px rgba(0,0,0,0.05);
+    }
+
+    .cipher {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.74rem;
+      color: #1f6b3b;
+      word-break: break-all;
+      background: rgba(238,250,240,0.92);
+      animation: cipherPulse 1.6s ease-in-out infinite alternate;
+    }
+
+    .lock-mid {
+      width: 52px;
+      height: 52px;
+      margin: -2px auto;
+      border-radius: 18px;
+      background: linear-gradient(180deg, #39e75f, #22c84a);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 12px 22px rgba(57,231,95,0.26);
+      font-size: 1.55rem;
+      animation: softFloat 1.6s ease-in-out infinite alternate;
+    }
+
+    .apps-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+      width: min(300px, 100%);
+    }
+
+    .app-pill {
+      width: 74px;
+      height: 74px;
+      border-radius: 24px;
+      background: rgba(255,255,255,0.88);
+      border: 1px solid rgba(17,17,17,0.08);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 18px rgba(0,0,0,0.06);
+      animation: softFloat 1.8s ease-in-out infinite alternate;
+    }
+
+    .app-pill:nth-child(2) { animation-delay: .2s; }
+    .app-pill:nth-child(3) { animation-delay: .4s; }
+    .app-pill:nth-child(4) { animation-delay: .6s; }
+
+    .app-icon { font-size: 1.55rem; }
+    .app-name { margin-top: 5px; font-size: 0.62rem; font-weight: 900; color: #555; }
+
+    .destroy-wrap {
+      width: min(300px, 100%);
+      display: grid;
+      gap: 12px;
+      justify-items: center;
+    }
+
+    .final-message {
+      min-height: 54px;
+      border-radius: 18px;
+      padding: 12px 14px;
+      width: 100%;
+      background: rgba(255,255,255,0.86);
+      border: 1px solid rgba(17,17,17,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      font-weight: 900;
+      animation: cipherPulse 1.6s ease-in-out infinite alternate;
+    }
+
+    .burst {
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle, rgba(57,231,95,0.95) 0%, rgba(57,231,95,0.42) 24%, rgba(57,231,95,0.10) 48%, transparent 70%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.2rem;
+      animation: burstAnim 1.55s ease-in-out infinite;
+    }
+
+    .content {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+    }
+
+    .title {
+      margin: 0;
+      font-size: 1.22rem;
+      line-height: 1.13;
+      font-weight: 950;
+      letter-spacing: -0.02em;
+    }
+
+    .text {
+      margin: 9px 0 0;
+      font-size: 0.86rem;
+      line-height: 1.42;
+      color: var(--muted);
+      font-weight: 650;
+    }
+
+    .note {
+      margin-top: 12px;
+      border-radius: 18px;
+      padding: 11px 12px;
+      background: rgba(255,248,238,0.9);
+      border: 1px solid rgba(218,148,19,0.22);
+      color: #8a5a12;
+      font-size: 0.76rem;
+      line-height: 1.38;
+      font-weight: 800;
+    }
+
+    .progress {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      gap: 6px;
+      margin: 18px 0 14px;
+    }
+
+    .bar {
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(17,17,17,0.08);
+      overflow: hidden;
+    }
+
+    .bar.active {
+      background: rgba(57,231,95,0.95);
+      box-shadow: 0 0 10px rgba(57,231,95,0.28);
+    }
+
+    .nav {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 10px;
+    }
+
+    .btn {
+      min-height: 48px;
+      border-radius: 18px;
+      border: 2px solid rgba(17,17,17,0.12);
+      background: rgba(255,255,255,0.86);
+      color: #111;
+      font-size: 0.84rem;
+      font-weight: 950;
+      cursor: pointer;
+      transition: transform var(--transition), box-shadow var(--transition), opacity var(--transition), border-color var(--transition);
+    }
+
+    .btn.primary {
+      background: linear-gradient(180deg, rgba(57,231,95,0.98), rgba(39,215,74,0.96));
+      border-color: rgba(22,140,55,0.16);
+      color: #06210d;
+      box-shadow: 0 10px 18px rgba(57,231,95,0.18);
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      border-color: rgba(57,231,95,0.75);
+      box-shadow: 0 10px 18px rgba(0,0,0,0.08), 0 0 18px rgba(57,231,95,0.18);
+    }
+
+    .btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .footer {
+      margin-top: 12px;
+      text-align: center;
+    }
+
+    .home-btn {
+      width: min(100%, 340px);
+      min-height: 50px;
+      border-radius: 18px;
+      border: 2px solid rgba(17,17,17,0.12);
+      background: rgba(255,255,255,0.72);
+      font-weight: 950;
+      color: #222;
+      cursor: pointer;
+    }
+
+    .version {
+      margin-top: 8px;
+      text-align: center;
+      font-size: 0.66rem;
+      color: #9a9a9a;
+      letter-spacing: 0.08em;
+    }
+
+
+    .skip-link {
+      position: relative;
+      z-index: 1;
+      margin-top: 10px;
+      width: 100%;
+      min-height: 38px;
+      border: none;
+      background: transparent;
+      color: #6f6f6f;
+      font-size: 0.73rem;
+      font-weight: 900;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+    }
+
+    .skip-link:hover { color: #1f6b3b; }
+
+    .stage-caption {
+      position: absolute;
+      left: 50%;
+      bottom: 10px;
+      transform: translateX(-50%);
+      z-index: 2;
+      min-width: 130px;
+      border-radius: 999px;
+      padding: 6px 10px;
+      background: rgba(255,255,255,0.78);
+      border: 1px solid rgba(17,17,17,0.07);
+      color: #555;
+      font-size: 0.66rem;
+      font-weight: 900;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      text-align: center;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.05);
+    }
+
+    .security-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      margin-top: 10px;
+      border-radius: 999px;
+      padding: 7px 11px;
+      background: rgba(57,231,95,0.12);
+      border: 1px solid rgba(27,152,63,0.18);
+      color: #1f6b3b;
+      font-size: 0.72rem;
+      font-weight: 900;
+    }
+
+    .path-dot {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(57,231,95,0.95);
+      box-shadow: 0 0 14px rgba(57,231,95,0.7);
+      animation: dotTravel 2s ease-in-out infinite;
+    }
+
+    .choice.accept {
+      border-color: rgba(27,152,63,0.22);
+      background: rgba(238,250,240,0.92);
+    }
+
+    .choice.reject {
+      border-color: rgba(176,0,32,0.18);
+      background: rgba(255,241,241,0.86);
+    }
+
+    .mini-warning {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      z-index: 2;
+      width: 44px;
+      height: 44px;
+      border-radius: 16px;
+      background: rgba(255,248,238,0.92);
+      border: 1px solid rgba(218,148,19,0.22);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      box-shadow: 0 10px 18px rgba(0,0,0,0.06);
+      animation: softFloat 1.7s ease-in-out infinite alternate;
+    }
+
+    .micro-copy {
+      position: absolute;
+      right: 14px;
+      bottom: 12px;
+      z-index: 2;
+      font-size: 0.62rem;
+      font-weight: 900;
+      color: #777;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    @keyframes dotTravel {
+      0% { transform: translate(-70px, 0); opacity: 0; }
+      18% { opacity: 1; }
+      50% { transform: translate(0, -9px); opacity: 1; }
+      82% { opacity: 1; }
+      100% { transform: translate(70px, 0); opacity: 0; }
+    }
+
+    @keyframes fileFly {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-8px) scale(1.04); }
+    }
+
+    @keyframes pulseGlow {
+      from { opacity: 0.55; transform: scale(0.96); }
+      to { opacity: 1; transform: scale(1.05); }
+    }
+
+    @keyframes softFloat {
+      from { transform: translateY(0); }
+      to { transform: translateY(-6px); }
+    }
+
+    @keyframes timerTick {
+      from { transform: scale(0.96) rotate(-2deg); }
+      to { transform: scale(1.03) rotate(2deg); }
+    }
+
+    @keyframes ringCall {
+      0%, 100% { transform: rotate(0) scale(1); }
+      30% { transform: rotate(-7deg) scale(1.04); }
+      60% { transform: rotate(7deg) scale(1.04); }
+    }
+
+    @keyframes cipherPulse {
+      from { box-shadow: 0 10px 18px rgba(0,0,0,0.05); }
+      to { box-shadow: 0 10px 18px rgba(0,0,0,0.05), 0 0 20px rgba(57,231,95,0.20); }
+    }
+
+    @keyframes burstAnim {
+      0% { transform: scale(0.86); opacity: 0.85; }
+      55% { transform: scale(1.08); opacity: 1; }
+      100% { transform: scale(0.92); opacity: 0.75; }
+    }
+
+    @media (max-width: 390px) {
+      .card { min-height: 500px; padding: 16px 14px 14px; }
+      .animation-stage { min-height: 198px; }
+      .phone { width: 64px; height: 108px; }
+      .file-token { width: 42px; height: 54px; }
+      .arrow-line { width: 34px; margin: 0 5px; }
+      .title { font-size: 1.12rem; }
+      .text { font-size: 0.82rem; }
+    }
+  </style>
+
+  <!-- GG84 PWA iOS - GG84_V.2_14.04.26 -->
+  <meta name="theme-color" content="#0b0b0b">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="GG84">
+  <meta name="application-name" content="GG84">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="gg84-update-tag" content="GG84_V.2_14.04.26">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  <link rel="apple-touch-icon" sizes="167x167" href="apple-touch-icon-167.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="apple-touch-icon-152.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="apple-touch-icon-120.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+  <link rel="stylesheet" href="pwa-ios.css">
+</head>
+
+<body>
+  <main class="shell">
+    <section class="hero">
+      <div class="hero-inner">
+        <img src="logo3.png" class="logo" alt="GG84">
+        <p class="brand">GG84-SPP</p>
+        <p class="brand-sub">SECURE PRIVATE PROTOCOL</p>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="step-top">
+        <div class="kicker" id="kicker">Tutorial</div>
+        <div class="step-count" id="stepCount">1 / 8</div>
+      </div>
+
+      <div class="animation-stage">
+        <div id="scene" class="scene"></div>
+      </div>
+
+      <div class="content">
+        <h1 id="title" class="title"></h1>
+        <p id="text" class="text"></p>
+        <div id="note" class="note"></div>
+      </div>
+
+      <div id="progress" class="progress"></div>
+
+      <div class="nav">
+        <button id="prevBtn" class="btn" type="button" onclick="prevStep()">Indietro</button>
+        <button id="nextBtn" class="btn primary" type="button" onclick="nextStep()">Avanti</button>
+      </div>
+
+      <button id="skipBtn" class="skip-link" type="button" onclick="skipTutorial()">Salta tutorial</button>
+    </section>
+
+    <div class="footer">
+      <button id="backBtn" class="home-btn" type="button" onclick="goBackFromTutorial()">← Torna indietro</button>
+    </div>
+
+    <div class="version">GG84_V3_25.04.26</div>
+  </main>
+
+  <script>
+    const steps = [
+      {
+        kicker: "Invito",
+        title: "Invia un invito GG84",
+        text: "Il primo utente genera un file .gg84 e lo inoltra tramite un’app esterna: WhatsApp, Telegram, Instagram, email o altro canale moderno.",
+        note: "GG84 non usa server: il trasporto resta fuori dall’app.",
+        scene: `
+          <span class="stage-caption">file invito</span>
+          <div class="phone">A<span class="phone-label">Utente A</span></div>
+          <div class="arrow-line"><span class="path-dot"></span></div>
+          <div class="file-token">↗</div>
+          <div class="arrow-line"></div>
+          <div class="phone">B<span class="phone-label">Utente B</span></div>
+        `
+      },
+      {
+        kicker: "Scadenza",
+        title: "Gli inviti durano 15 minuti",
+        text: "Ogni invito GG84 ha una finestra temporale breve. Se non viene usato in tempo, va generato un nuovo invito.",
+        note: "Dopo la chiusura della connessione, i vecchi inviti vengono revocati anche se non sono ancora scaduti.",
+        scene: `
+          <div class="mini-warning">⏱️</div>
+          <div class="timer">
+            <div class="timer-inner">
+              <div class="timer-value">15</div>
+              <div class="timer-label">MINUTI</div>
+            </div>
+          </div>
+          <span class="micro-copy">scadenza breve</span>
+        `
+      },
+      {
+        kicker: "Scelta",
+        title: "Accetta o rifiuta",
+        text: "Chi riceve l’invito può accettare e generare la risposta GG84, oppure rifiutare e interrompere subito il collegamento.",
+        note: "Se non riconosci l’invito, rifiutalo.",
+        scene: `
+          <div class="choice-wrap">
+            <div class="choice accept">
+              <div class="choice-icon">✅</div>
+              <div class="choice-text">Accetta</div>
+            </div>
+            <div class="choice reject">
+              <div class="choice-icon">❌</div>
+              <div class="choice-text">Rifiuta</div>
+            </div>
+          </div>
+        `
+      },
+      {
+        kicker: "Risposta",
+        title: "Invia la risposta GG84",
+        text: "Se l’invito viene accettato, GG84 prepara un secondo file .gg84. Questo file torna al primo utente per completare la connessione.",
+        note: "La risposta deve corrispondere esattamente all’invito ricevuto.",
+        scene: `
+          <span class="stage-caption">file risposta</span>
+          <div class="phone">B<span class="phone-label">Utente B</span></div>
+          <div class="arrow-line"><span class="path-dot"></span></div>
+          <div class="file-token">↩</div>
+          <div class="arrow-line"></div>
+          <div class="phone">A<span class="phone-label">Utente A</span></div>
+        `
+      },
+      {
+        kicker: "Verifica",
+        title: "Verifica codice e colore",
+        text: "Prima di fidarti del collegamento, entrambi devono confrontare codice e colore. La verifica migliore è tramite chiamata vocale.",
+        note: "Se codice o colore non coincidono, interrompi la connessione.",
+        scene: `
+          <div class="speech-call">📞</div>
+          <div class="verify-pair">
+            <div class="verify-row">
+              <span class="verify-phone">📱 A</span>
+              <span class="verify-chip">🟢 4821</span>
+            </div>
+            <div class="verify-row">
+              <span class="verify-phone">📱 B</span>
+              <span class="verify-chip">🟢 4821</span>
+            </div>
+          </div>
+        `
+      },
+      {
+        kicker: "Messaggi",
+        title: "Cifra e invia il testo",
+        text: "Scrivi un messaggio, premi Proteggi e GG84 crea un payload cifrato da copiare o inviare con app esterne.",
+        note: "GG84 non conserva una chat interna: protegge il contenuto e poi lo consegni dove preferisci.",
+        scene: `
+          <div class="cipher-box">
+            <div class="plain">Ciao, questo è un messaggio</div>
+            <div class="lock-mid">🔒</div>
+            <div class="cipher">GG84:7K9X...A2FQ...ZP81</div>
+            <div class="security-pill">Nessuna chat interna</div>
+          </div>
+        `
+      },
+      {
+        kicker: "Chiusura",
+        title: "Fine sessione e autodistruzione",
+        text: "La sessione può terminare con l’ultimo messaggio o con la chiusura manuale. Alla fine, lo stato crittografico viene distrutto e il collegamento non resta recuperabile.",
+        note: "“Azzera tutto” è invece il reset completo dell’identità e dell’app.",
+        scene: `
+          <div class="destroy-wrap">
+            <div class="final-message">📩 Ultimo messaggio</div>
+            <div class="burst">💥</div>
+            <div class="final-message">Sessione chiusa</div>
+          </div>
+        `
+      },
+      {
+        kicker: "Modello",
+        title: "GG84 non è una chat",
+        text: "GG84 è un overlay crittografico temporaneo: protegge il contenuto, poi lo invii con le app che usi già.",
+        note: "Nessun account, nessun cloud GG84, nessuna cronologia interna da gestire.",
+        scene: `
+          <div class="apps-row">
+            <div class="app-pill"><span class="app-icon">🔒</span><span class="app-name">GG84</span></div>
+            <div class="app-pill"><span class="app-icon">💬</span><span class="app-name">Chat</span></div>
+            <div class="app-pill"><span class="app-icon">📧</span><span class="app-name">Email</span></div>
+            <div class="app-pill"><span class="app-icon">📲</span><span class="app-name">Social</span></div>
+          </div>
+        `
+      }
+    ];
+
+    let current = 0;
+
+    const scene = document.getElementById("scene");
+    const title = document.getElementById("title");
+    const text = document.getElementById("text");
+    const note = document.getElementById("note");
+    const kicker = document.getElementById("kicker");
+    const stepCount = document.getElementById("stepCount");
+    const progress = document.getElementById("progress");
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const backBtn = document.getElementById("backBtn");
+    const skipBtn = document.getElementById("skipBtn");
+
+    function goBackFromTutorial() {
+      const params = new URLSearchParams(window.location.search);
+      const source = params.get("from") || "";
+
+      if (source === "setup") {
+        localStorage.setItem("gg84_tutorial_seen", "1");
+        location.href = "index.html";
+        return;
+      }
+
+      location.href = "identita.html";
+    }
+
+    function skipTutorial() {
+      const params = new URLSearchParams(window.location.search);
+      const source = params.get("from") || "";
+
+      if (source === "gestione") {
+        location.href = "identita.html";
+        return;
+      }
+
+      localStorage.setItem("gg84_tutorial_seen", "1");
+      location.href = "index.html";
+    }
+
+    function renderProgress() {
+      progress.innerHTML = "";
+      steps.forEach((_, index) => {
+        const bar = document.createElement("div");
+        bar.className = "bar" + (index <= current ? " active" : "");
+        progress.appendChild(bar);
+      });
+    }
+
+    function renderStep() {
+      const params = new URLSearchParams(window.location.search);
+      const source = params.get("from") || "";
+      if (backBtn) backBtn.textContent = source === "gestione" ? "← Torna a Gestione" : "Salta e vai alla Home";
+      if (skipBtn) skipBtn.textContent = source === "gestione" ? "Chiudi tutorial" : "Salta tutorial";
+      const step = steps[current];
+      scene.innerHTML = step.scene;
+      title.textContent = step.title;
+      text.textContent = step.text;
+      note.textContent = step.note;
+      kicker.textContent = step.kicker;
+      stepCount.textContent = `${current + 1} / ${steps.length}`;
+      prevBtn.disabled = current === 0;
+      nextBtn.textContent = current === steps.length - 1
+        ? (source === "gestione" ? "Torna a Gestione" : "Entra in GG84")
+        : "Avanti";
+      renderProgress();
+    }
+
+    function nextStep() {
+      if (current < steps.length - 1) {
+        current += 1;
+        renderStep();
+        return;
+      }
+      
+      const params = new URLSearchParams(window.location.search);
+      const tutorialSource = params.get("from") || "";
+
+      if (tutorialSource === "gestione") {
+        location.href = "identita.html";
+        return;
+      }
+
+      localStorage.setItem("gg84_tutorial_seen", "1");
+      location.href = "index.html";
+
+    }
+
+    function prevStep() {
+      if (current > 0) {
+        current -= 1;
+        renderStep();
+      }
+    }
+
+    renderStep();
+  </script>
+
+<script src="pwa-install.js" defer></script>
+</body>
+</html>

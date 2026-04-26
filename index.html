@@ -1,0 +1,1766 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>GG84 – Home sicura</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0b0b0b">
+
+  <style>
+    :root {
+      --bg: #f4f4f2;
+      --panel-solid: #ffffff;
+      --text: #111111;
+      --muted: #5f5f5f;
+      --shadow: 0 8px 18px rgba(0, 0, 0, 0.06);
+
+      --green-main: #39e75f;
+      --green-soft: #eefaf0;
+      --green-line: rgba(27, 152, 63, 0.26);
+
+      --pairing-main: #a8f0b5;
+      --pairing-soft: #f1fff4;
+      --pairing-line: rgba(80, 200, 120, 0.35);
+
+      --amber-main: #f2a91b;
+      --amber-soft: #fff5df;
+      --amber-line: rgba(218, 148, 19, 0.30);
+
+      --red-main: #d94b4b;
+      --red-soft: #fff0f0;
+      --red-line: rgba(217, 75, 75, 0.28);
+
+      --share-soft: #eef4ff;
+      --share-icon: #dfe9ff;
+
+      --private-soft: #f6efe7;
+      --private-icon: #ebdfd1;
+
+      --identity-soft: #eef2f6;
+      --identity-icon: #e2e8f0;
+
+      --pro-soft: #f7f0cf;
+      --pro-icon: #efe4ac;
+
+      --transition: 0.18s ease;
+      --safe-top: env(safe-area-inset-top, 0px);
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Poppins, Arial, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+      overflow-x: hidden;
+    }
+
+    body {
+      min-height: 100vh;
+      padding-top: calc(var(--safe-top) + 12px);
+      position: relative;
+      background:
+        radial-gradient(circle at top center, rgba(57, 231, 95, 0.08) 0%, rgba(57, 231, 95, 0.02) 22%, rgba(0, 0, 0, 0) 44%),
+        var(--bg);
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: calc(var(--safe-top) + 8px);
+      background: #000000;
+      z-index: 999;
+      pointer-events: none;
+    }
+
+    .shell {
+      width: 100%;
+      max-width: 430px;
+      margin: 0 auto;
+      padding: 10px 14px 18px;
+    }
+
+    .intro-screen {
+      position: fixed;
+      inset: 0;
+      background: #000000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      opacity: 1;
+      visibility: visible;
+      transition: opacity 0.45s ease, visibility 0.45s ease;
+    }
+
+    .intro-screen.hide {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    .intro-content {
+      text-align: center;
+      transform: translateY(-6px);
+    }
+
+    .intro-logo {
+      width: 102px;
+      height: 102px;
+      object-fit: contain;
+      display: block;
+      margin: 0 auto 12px;
+    }
+
+    .intro-brand {
+      color: #ffffff;
+      font-size: 1.35rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+    }
+
+    .hero-wrap {
+      position: relative;
+      margin-bottom: 12px;
+    }
+
+    .hero-wrap::before {
+      content: "";
+      position: absolute;
+      inset: -18px -24px;
+      background:
+        radial-gradient(circle at 50% 42%, rgba(57, 231, 95, 0.24) 0%, rgba(57, 231, 95, 0.11) 26%, rgba(57, 231, 95, 0.04) 48%, rgba(0, 0, 0, 0) 72%);
+      filter: blur(18px);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .hero {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      background: transparent;
+      border: none;
+      border-radius: 0;
+      padding: 18px 16px 12px;
+      box-shadow: none;
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+      overflow: visible;
+    }
+
+    .hero-logo-wrap {
+      width: 128px;
+      height: 128px;
+      border-radius: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+      box-shadow:
+        0 22px 44px rgba(57, 231, 95, 0.18),
+        0 0 46px rgba(57, 231, 95, 0.16);
+      margin: 20px auto 18px;
+      overflow: visible;
+    }
+
+    .hero-logo {
+      width: 104px;
+      height: 104px;
+      object-fit: contain;
+      display: block;
+      border-radius: 26px;
+      filter: drop-shadow(0 14px 24px rgba(0,0,0,0.16));
+    }
+
+    .hero-title {
+      margin: 0;
+      font-size: 1.42rem;
+      line-height: 1.08;
+      font-weight: 950;
+      letter-spacing: -0.03em;
+      color: #050505;
+      text-shadow: 0 1px 0 rgba(255,255,255,0.75);
+    }
+
+    .hero-purpose {
+      margin: 6px 0 0;
+      font-size: 0.75rem;
+      line-height: 1.25;
+      color: #6a6a6a;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+    }
+
+
+    .hero-brand-block {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      margin: 0;
+      text-align: center;
+    }
+
+    .hero-brand-main {
+      margin: 0;
+      font-size: 1.18rem;
+      line-height: 1;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      color: #5f5f5f;
+    }
+
+    .hero-brand-sub {
+      margin: 0;
+      font-size: 0.64rem;
+      line-height: 1.1;
+      font-weight: 800;
+      letter-spacing: 0.18em;
+      color: #707070;
+    }
+
+
+    .hero-subtitle {
+      margin: 2px 0 0;
+      font-size: 0.84rem;
+      line-height: 1.35;
+      color: #5e5e5e;
+    }
+
+    .actions-grid {
+      display: grid;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .actions-grid > * {
+      min-width: 0;
+      max-width: 100%;
+    }
+
+    .action-card,
+    .action-card-button {
+      width: 100%;
+      border-radius: 28px;
+      border: 2px solid rgba(17,17,17,0.08);
+      background: rgba(255,255,255,0.88);
+      padding: 18px 18px 16px;
+      box-shadow: var(--shadow);
+      transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition), background var(--transition), opacity var(--transition);
+    }
+
+    .action-card-button {
+      appearance: none;
+      -webkit-appearance: none;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .action-card-button.clickable:hover,
+    .action-card.clickable:hover {
+      transform: translateY(-1px);
+      box-shadow:
+        0 12px 22px rgba(0,0,0,0.07),
+        0 0 0 1.5px rgba(57, 231, 95, 0.55),
+        0 0 18px rgba(57, 231, 95, 0.20);
+    }
+
+    .action-card-button.disabled {
+      opacity: 0.72;
+      cursor: default;
+    }
+
+    .card-connection-red {
+      background: linear-gradient(180deg, rgba(255,240,240,0.98), rgba(248,243,243,0.92));
+      border-color: var(--red-line);
+    }
+
+    .card-connection-amber {
+      background: linear-gradient(180deg, rgba(255,245,223,0.98), rgba(248,244,235,0.92));
+      border-color: var(--amber-line);
+    }
+
+    .card-connection-green {
+      background: linear-gradient(180deg, rgba(218,255,226,0.98), rgba(232,252,236,0.94));
+      border-color: rgba(27, 152, 63, 0.34);
+      box-shadow:
+        0 14px 28px rgba(0,0,0,0.08),
+        0 0 24px rgba(57,231,95,0.18);
+    }
+
+    .card-connection-pairing {
+      background: linear-gradient(180deg, rgba(241,255,244,0.98), rgba(236,250,240,0.92));
+      border-color: var(--pairing-line);
+      box-shadow:
+        0 12px 24px rgba(0,0,0,0.07),
+        0 0 18px rgba(168,240,181,0.22);
+    }
+
+    .card-messages {
+      background: linear-gradient(180deg, rgba(238,244,255,0.98), rgba(241,243,250,0.92));
+      border-color: rgba(110, 137, 210, 0.35);
+      box-shadow:
+        0 14px 28px rgba(0,0,0,0.08),
+        0 0 22px rgba(57,231,95,0.12);
+    }
+
+    .card-private {
+      background: linear-gradient(180deg, rgba(246,239,231,0.98), rgba(242,239,236,0.92));
+      border-color: rgba(107, 84, 58, 0.32);
+    }
+
+    .card-identity {
+  background: linear-gradient(180deg, rgba(235,230,255,0.98), rgba(228,220,255,0.92));
+  border-color: rgba(140, 110, 255, 0.35);
+}
+
+    .card-pro {
+  background: linear-gradient(180deg, rgba(57,255,20,0.18), rgba(0,255,100,0.12));
+  border-color: rgba(0, 255, 120, 0.45);
+}
+
+    .pro-badge {
+      position: absolute;
+      top: 10px;
+      right: 12px;
+      font-size: 0.65rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      color: #715d09;
+      background: rgba(255,255,255,0.56);
+      border: 1px solid rgba(163, 148, 68, 0.22);
+      padding: 4px 8px;
+      border-radius: 999px;
+    }
+
+    .card-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-width: 0;
+      width: 100%;
+    }
+
+    .card-icon {
+      width: 70px;
+      height: 70px;
+      border-radius: 22px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(17,17,17,0.05);
+    }
+
+    .icon-connection { background: linear-gradient(180deg, #f6f6f4, #ececea); }
+    .icon-messages { background: var(--share-icon); }
+    .icon-private { background: var(--private-icon); }
+    .icon-identity {
+  background: linear-gradient(180deg, #f0e6f7, #dcd2ff);
+}
+    .icon-pro {
+  background: linear-gradient(180deg, #dcf2f0, #00ff88);
+}
+
+    .card-content {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .card-title {
+      margin: 0 0 4px;
+      font-size: 0.98rem;
+      line-height: 1.2;
+      font-weight: 900;
+      color: #111111;
+      letter-spacing: -0.01em;
+    }
+
+    .card-subtitle {
+      margin: 0;
+      font-size: 0.78rem;
+      line-height: 1.4;
+      color: #555555;
+    }
+
+    .card-helper {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 10px;
+      font-size: 0.74rem;
+      font-weight: 800;
+      color: #555555;
+    }
+
+    .card-helper-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      background: rgba(90,90,90,0.65);
+    }
+
+    .dot-red { background: var(--red-main); }
+    .dot-amber { background: var(--amber-main); }
+    .dot-green { background: var(--green-main); }
+    .dot-gray { background: rgba(90,90,90,0.65); }
+
+    .dynamic-area {
+      margin-top: 14px;
+    }
+
+    .pending-countdown {
+      margin-top: 10px;
+      min-height: 38px;
+      border-radius: 18px;
+      padding: 9px 12px;
+      background: rgba(255, 245, 223, 0.90);
+      border: 1px solid rgba(218, 148, 19, 0.30);
+      color: #8a5a12;
+      font-size: 0.78rem;
+      font-weight: 950;
+      text-align: center;
+      grid-column: 1 / -1;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      box-shadow:
+        0 8px 16px rgba(0,0,0,0.05),
+        0 0 16px rgba(242,169,27,0.12);
+      animation: countdownSoftGlow 1.8s ease-in-out infinite alternate;
+    }
+
+    .pending-countdown.warning {
+      background: rgba(255, 248, 238, 0.96);
+      border-color: rgba(242, 169, 27, 0.48);
+      color: #8a5a12;
+      box-shadow:
+        0 8px 16px rgba(0,0,0,0.05),
+        0 0 20px rgba(242,169,27,0.24);
+    }
+
+    .pending-countdown.critical {
+      background: rgba(255, 241, 241, 0.96);
+      border-color: rgba(176, 0, 32, 0.32);
+      color: #8a1834;
+      box-shadow:
+        0 8px 16px rgba(0,0,0,0.05),
+        0 0 22px rgba(217,75,75,0.22);
+      animation: countdownCriticalPulse 0.9s ease-in-out infinite alternate;
+    }
+
+    .pending-countdown.expired {
+      background: rgba(255, 241, 241, 0.98);
+      border-color: rgba(176, 0, 32, 0.36);
+      color: #8a1834;
+      animation: none;
+    }
+
+    .countdown-pulse {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      background: #f2a91b;
+      box-shadow: 0 0 0 rgba(242,169,27,0.55);
+      animation: countdownDot 1.2s ease-in-out infinite;
+    }
+
+    .pending-countdown.critical .countdown-pulse,
+    .pending-countdown.expired .countdown-pulse {
+      background: #d94b4b;
+      animation: countdownDotRed 0.8s ease-in-out infinite;
+    }
+
+    @keyframes countdownSoftGlow {
+      from {
+        box-shadow:
+          0 8px 16px rgba(0,0,0,0.05),
+          0 0 12px rgba(242,169,27,0.10);
+      }
+      to {
+        box-shadow:
+          0 10px 18px rgba(0,0,0,0.06),
+          0 0 22px rgba(242,169,27,0.20);
+      }
+    }
+
+    @keyframes countdownCriticalPulse {
+      from { transform: scale(1); }
+      to { transform: scale(1.015); }
+    }
+
+    @keyframes countdownDot {
+      0% { box-shadow: 0 0 0 0 rgba(242,169,27,0.50); }
+      70% { box-shadow: 0 0 0 8px rgba(242,169,27,0); }
+      100% { box-shadow: 0 0 0 0 rgba(242,169,27,0); }
+    }
+
+    @keyframes countdownDotRed {
+      0% { box-shadow: 0 0 0 0 rgba(217,75,75,0.50); }
+      70% { box-shadow: 0 0 0 8px rgba(217,75,75,0); }
+      100% { box-shadow: 0 0 0 0 rgba(217,75,75,0); }
+    }
+
+
+    .inline-actions {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      width: 100%;
+      min-width: 0;
+      align-items: start;
+    }
+
+    .mini-btn {
+      min-height: 44px;
+      padding: 0 18px;
+      border-radius: 999px;
+      border: 2px solid rgba(17,17,17,0.14);
+      background: rgba(255,255,255,0.88);
+      color: #151515;
+      font-size: 0.82rem;
+      font-weight: 900;
+      cursor: pointer;
+      transition: transform var(--transition), box-shadow var(--transition), background var(--transition), border-color var(--transition), color var(--transition), opacity var(--transition);
+      box-shadow: 0 6px 14px rgba(0,0,0,0.04);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      white-space: normal;
+      min-width: 0;
+      width: 100%;
+      line-height: 1.2;
+    }
+
+    .mini-btn:hover {
+      transform: translateY(-1px);
+      border-color: rgba(57, 231, 95, 0.75);
+      box-shadow:
+        0 10px 18px rgba(0,0,0,0.08),
+        0 0 0 1.5px rgba(57, 231, 95, 0.55),
+        0 0 18px rgba(57, 231, 95, 0.22);
+    }
+    .mini-btn:focus-visible {
+      outline: none;
+      border-color: rgba(57, 231, 95, 0.75);
+      box-shadow:
+        0 10px 18px rgba(0,0,0,0.08),
+        0 0 0 2px rgba(57, 231, 95, 0.55),
+        0 0 20px rgba(57, 231, 95, 0.24);
+    }
+    .mini-btn:active { transform: translateY(0); }
+
+    .mini-btn.primary {
+      background: linear-gradient(180deg, rgba(57,231,95,0.98), rgba(39,215,74,0.96));
+      border-color: rgba(22,140,55,0.18);
+      color: #06210d;
+      box-shadow:
+        0 10px 18px rgba(57,231,95,0.18),
+        0 0 16px rgba(57,231,95,0.14);
+    }
+
+    .mini-btn.primary-strong {
+      background: linear-gradient(180deg, #39e75f, #1ed760);
+      color: #04210c;
+      border-color: rgba(20,120,50,0.25);
+      box-shadow:
+        0 12px 24px rgba(57,231,95,0.28),
+        0 0 20px rgba(57,231,95,0.18);
+    }
+
+
+    .mini-btn.ghost {
+      background: rgba(255,255,255,0.72);
+    }
+
+    .mini-btn.danger-soft {
+      background: rgba(255, 241, 241, 0.96);
+      border-color: rgba(176, 0, 32, 0.28);
+      color: #8a1834;
+    }
+
+    .mini-btn.danger-soft:hover {
+      background: rgba(255, 232, 232, 1);
+      border-color: rgba(176, 0, 32, 0.38);
+    }
+
+    .mini-btn.danger-soft.disconnect-wide {
+      width: min(100%, 340px);
+      min-height: 50px;
+      margin: 6px auto 0 auto;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      border-radius: 18px;
+      padding: 0 20px;
+      grid-column: 1 / -1;
+    }
+
+    #verifyBtnHome,
+    #messageBtnHome {
+      width: min(100%, 340px);
+      min-height: 50px;
+      margin: 6px auto 0 auto;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      border-radius: 18px;
+      padding: 0 20px;
+      grid-column: 1 / -1;
+    }
+
+    #messageBtnHome {
+      background: linear-gradient(180deg, #39e75f, #13c94a);
+      border-color: rgba(20,120,50,0.28);
+      color: #03200b;
+      box-shadow:
+        0 12px 24px rgba(57,231,95,0.30),
+        0 0 24px rgba(57,231,95,0.20);
+    }
+
+    #identityCard,
+    .card-pro {
+      padding: 12px 14px;
+      border-radius: 22px;
+    }
+
+    #identityCard .card-row,
+    .card-pro .card-row {
+      gap: 12px;
+    }
+
+    #identityCard .card-icon,
+    .card-pro .card-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 18px;
+      font-size: 1.55rem;
+    }
+
+    #identityCard .card-title,
+    .card-pro .card-title {
+      margin-bottom: 2px;
+      font-size: 0.9rem;
+    }
+
+    #identityCard .card-subtitle,
+    .card-pro .card-subtitle {
+      font-size: 0.72rem;
+      line-height: 1.28;
+    }
+
+    #identityCard .card-helper,
+    .card-pro .card-helper {
+      margin-top: 6px;
+      font-size: 0.68rem;
+    }
+
+.home-wide {
+  width: min(100%, 340px);
+  min-height: 50px;
+  margin: 6px auto 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  border-radius: 18px;
+  padding: 0 20px;
+  grid-column: 1 / -1;
+}
+
+    .traffic-mini {
+      width: 28px;
+      height: 44px;
+      border-radius: 12px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(244,244,242,0.92));
+      border: 1px solid rgba(17,17,17,0.08);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      position: absolute;
+      left: 13px;
+      top: 13px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
+    }
+
+    .traffic-mini-light {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      opacity: 0.22;
+    }
+
+    .light-red { background: #d94b4b; }
+    .light-amber { background: #f2a91b; }
+    .light-green { background: #39e75f; }
+
+    .traffic-mini.red .light-red { opacity: 1; }
+    .traffic-mini.amber .light-amber { opacity: 1; }
+    .traffic-mini.green .light-green { opacity: 1; }
+
+    .lock-open {
+      position: absolute;
+      right: 6px;
+      bottom: 10px;
+      font-size: 1.65rem;
+      line-height: 1;
+    }
+
+    .social-btn {
+      width: 100%;
+      margin-top: 12px;
+      min-height: 44px;
+      border-radius: 18px;
+      border: 2px solid rgba(17,17,17,0.12);
+      background: rgba(255,255,255,0.64);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      font-size: 0.86rem;
+      font-weight: 900;
+      color: #111111;
+      cursor: pointer;
+      box-shadow: var(--shadow);
+      transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition), background var(--transition);
+    }
+
+    .social-btn:hover {
+      transform: translateY(-1px);
+      border-color: rgba(57, 231, 95, 0.75);
+      box-shadow:
+        0 12px 22px rgba(0,0,0,0.08),
+        0 0 0 1.5px rgba(57, 231, 95, 0.55),
+        0 0 18px rgba(57, 231, 95, 0.20);
+    }
+
+    .social-btn:focus-visible {
+      outline: none;
+      border-color: rgba(57, 231, 95, 0.75);
+      box-shadow:
+        0 12px 22px rgba(0,0,0,0.08),
+        0 0 0 2px rgba(57, 231, 95, 0.55),
+        0 0 20px rgba(57, 231, 95, 0.22);
+    }
+
+    .ig-icon {
+      width: 22px;
+      height: 22px;
+      flex-shrink: 0;
+    }
+
+    .version {
+      margin-top: 14px;
+      text-align: center;
+      font-size: 0.64rem;
+      color: #9a9a9a;
+      letter-spacing: 0.08em;
+      opacity: 0.88;
+    }
+
+    .verify-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.34);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px 14px;
+      z-index: 12000;
+    }
+
+    .verify-modal.show {
+      display: flex;
+    }
+
+    .verify-modal-card {
+      width: 100%;
+      max-width: 390px;
+      background: rgba(255,255,255,0.98);
+      border: 2px solid rgba(17,17,17,0.08);
+      border-radius: 30px;
+      padding: 20px 18px 18px;
+      box-shadow:
+        0 18px 40px rgba(0,0,0,0.18),
+        0 0 0 1px rgba(255,255,255,0.38) inset;
+      text-align: center;
+    }
+
+    .verify-modal-title {
+      margin: 0 0 6px;
+      font-size: 1.08rem;
+      font-weight: 900;
+      color: #111111;
+      letter-spacing: -0.01em;
+    }
+
+    .verify-modal-text {
+      margin: 0;
+      font-size: 0.84rem;
+      line-height: 1.4;
+      color: #5a5a5a;
+    }
+
+    .verify-symbol-shell {
+      margin: 16px auto 12px;
+      width: 152px;
+      height: 152px;
+      border-radius: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid rgba(17,17,17,0.08);
+      box-shadow:
+        0 16px 28px rgba(0,0,0,0.08),
+        inset 0 1px 0 rgba(255,255,255,0.35);
+    }
+
+    .verify-symbol-inner {
+      width: 106px;
+      height: 106px;
+      border-radius: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,255,255,0.96);
+      border: 1px solid rgba(17,17,17,0.08);
+      box-shadow: 0 10px 22px rgba(0,0,0,0.10);
+    }
+
+    .verify-symbol-inner img {
+      width: 72px;
+      height: 72px;
+      object-fit: contain;
+      display: block;
+    }
+
+    .verify-color-name {
+      margin: 0 0 4px;
+      font-size: 0.78rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #444444;
+    }
+
+    .verify-short-code {
+      margin: 0;
+      font-size: 2rem;
+      line-height: 1.05;
+      font-weight: 900;
+      letter-spacing: 0.10em;
+      color: #111111;
+    }
+
+    .verify-modal-actions {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .verify-modal-actions .mini-btn {
+      min-height: 50px;
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 640px) {
+      .inline-actions {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 390px) {
+      .shell {
+        padding-left: 12px;
+        padding-right: 12px;
+      }
+
+      .hero-logo-wrap {
+        width: 118px;
+        height: 118px;
+        margin-top: 18px;
+        margin-bottom: 16px;
+      }
+
+      .hero-logo {
+        width: 96px;
+        height: 96px;
+      }
+
+      .hero-title {
+        font-size: 1.32rem;
+      }
+
+      .hero-brand-main {
+        font-size: 1.02rem;
+      }
+
+      .hero-brand-sub {
+        font-size: 0.58rem;
+        letter-spacing: 0.14em;
+      }
+
+      .card-row {
+        align-items: flex-start;
+      }
+
+      .card-icon {
+        width: 64px;
+        height: 64px;
+      }
+
+      .inline-actions {
+        flex-direction: column;
+      }
+
+      .mini-btn {
+        width: 100%;
+      }
+
+      .card-subtitle {
+        font-size: 0.77rem;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="gg84_ux.css">
+
+  <!-- GG84 PWA iOS - GG84_V.2_14.04.26 -->
+  <meta name="theme-color" content="#0b0b0b">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="GG84">
+  <meta name="application-name" content="GG84">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="gg84-update-tag" content="GG84_V.2_14.04.26">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  <link rel="apple-touch-icon" sizes="167x167" href="apple-touch-icon-167.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="apple-touch-icon-152.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="apple-touch-icon-120.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+  <link rel="stylesheet" href="pwa-ios.css">
+</head>
+
+<body>
+  <div id="intro-screen" class="intro-screen">
+    <div class="intro-content">
+      <img src="logo3.png" alt="GG84" class="intro-logo">
+      <div class="intro-brand">GG84</div>
+    </div>
+  </div>
+
+  <main class="shell">
+    <div class="hero-wrap">
+      <section class="hero">
+        <div class="hero-brand-block">
+          <p class="hero-brand-main">GG84-SPP</p>
+          <p class="hero-brand-sub">SECURE PRIVATE PROTOCOL</p>
+        </div>
+
+        <div class="hero-logo-wrap">
+          <img src="logo3.png" alt="GG84 Logo" class="hero-logo">
+        </div>
+
+        <div class="hero-copy">
+          <h1 id="welcomeText" class="hero-title">Benvenuto</h1>
+          <p class="hero-purpose">Overlay sicuro per messaggi cifrati</p>
+        </div>
+      </section>
+    </div>
+
+    <section class="actions-grid">
+      <div id="connectionCard" class="action-card card-connection-red base clickable" onclick="goToConnection()">
+        <div class="card-row">
+          <div class="card-icon icon-connection">
+            <div id="connectionTraffic" class="traffic-mini red">
+              <div class="traffic-mini-light light-red"></div>
+              <div class="traffic-mini-light light-amber"></div>
+              <div class="traffic-mini-light light-green"></div>
+            </div>
+            <div id="connectionUnlock" class="lock-open">🔓</div>
+          </div>
+
+          <div class="card-content">
+            <p id="connectionCardTitle" class="card-title">Collega un contatto</p>
+            <p id="connectionCardSubtitle" class="card-subtitle">Instaura un collegamento protetto.</p>
+            <div id="connectionHelper" class="card-helper">
+              <span class="card-helper-dot dot-red"></span>
+              Nessun contatto collegato
+            </div>
+          </div>
+        </div>
+
+        <div id="dynamicConnectionArea" class="dynamic-area">
+          <div id="pendingCountdownHome" class="pending-countdown" style="display:none;">
+            <span class="countdown-pulse"></span>
+            <span id="pendingCountdownText">Invito in attesa</span>
+          </div>
+          <div class="inline-actions">
+            <button id="openConnectionBtnHome" type="button" class="mini-btn home-wide" onclick="goToConnectionFromButton(event)">Apri collegamento</button>
+            <button id="verifyBtnHome" type="button" class="mini-btn primary primary-strong" onclick="verifyCurrentPeerFromHome(event)">Conferma verifica</button>
+            <button id="messageBtnHome" type="button" class="mini-btn primary primary-strong" onclick="goToProtectedCommunicationFromButton(event)">Scambia messaggi protetti</button>
+            <button id="disconnectBtnHome" type="button" class="mini-btn danger-soft disconnect-wide" onclick="disconnectAndRestartFromHome(event)">Scollega</button>
+          </div>
+        </div>
+
+      </div>
+
+      <button id="identityCard" type="button" class="action-card-button card-identity clickable" onclick="goToIdentityArea()">
+        <div class="card-row">
+          <div class="card-icon icon-identity">👤</div>
+          <div class="card-content">
+            <p class="card-title">Gestione</p>
+            <p class="card-subtitle">Impostazioni, PIN, identità e reset.</p>
+            <div id="identityStateHelper" class="card-helper">
+              <span id="identityStateDot" class="card-helper-dot dot-red"></span>
+              <span id="identityStateText">Crea identità per usare GG84 SPP</span>
+            </div>
+          </div>
+        </div>
+      </button>
+
+      <button type="button" class="action-card-button card-pro clickable" onclick="location.href='pro.html'">
+        <span class="pro-badge">PRO</span>
+        <div class="card-row">
+          <div class="card-icon icon-pro">📁</div>
+          <div class="card-content">
+            <p class="card-title">GG84 PRO</p>
+            <p class="card-subtitle">Evoluzione per contenuti avanzati.</p>
+            <div class="card-helper">
+              <span class="card-helper-dot dot-amber"></span>
+              In progettazione
+            </div>
+          </div>
+        </div>
+      </button>
+    </section>
+
+
+    <div id="verifyModal" class="verify-modal" onclick="closeVerifyModal(event)">
+      <div class="verify-modal-card" onclick="event.stopPropagation()">
+        <h3 class="verify-modal-title">Verifica connessione GG84</h3>
+        <p class="verify-modal-text">Confronta codice e colore tramite chiamata vocale.</p>
+
+        <div id="verifySymbolShell" class="verify-symbol-shell">
+          <div class="verify-symbol-inner">
+            <img id="verifyLogoImg" src="logo3.jpg" alt="GG84 simbolo verifica" onerror="this.onerror=null;this.src='logo3.png';">
+          </div>
+        </div>
+
+        <p id="verifyColorName" class="verify-color-name">VERDE</p>
+        <p id="verifyCode" class="verify-short-code">----</p>
+
+        <div class="verify-modal-actions">
+          <button class="mini-btn primary" type="button" onclick="confirmVisualVerification()">Coincide</button>
+          <button class="mini-btn danger-soft" type="button" onclick="rejectVisualVerification()">Non coincide</button>
+        </div>
+      </div>
+    </div>
+
+    <button class="social-btn" onclick="openInstagram()">
+      <svg class="ig-icon" viewBox="0 0 24 24" aria-hidden="true">
+        <defs>
+          <linearGradient id="igGradient" x1="0%" y1="100%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#feda75"/>
+            <stop offset="28%" stop-color="#fa7e1e"/>
+            <stop offset="55%" stop-color="#d62976"/>
+            <stop offset="78%" stop-color="#962fbf"/>
+            <stop offset="100%" stop-color="#4f5bd5"/>
+          </linearGradient>
+        </defs>
+        <path fill="url(#igGradient)" d="M7.75 2h8.5C19.99 2 22 4.01 22 6.75v8.5C22 19.99 19.99 22 16.25 22h-8.5C4.01 22 2 19.99 2 16.25v-8.5C2 4.01 4.01 2 7.75 2zm0 2C5.68 4 4 5.68 4 7.75v8.5C4 18.32 5.68 20 7.75 20h8.5c2.07 0 3.75-1.68 3.75-3.75v-8.5C20 5.68 18.32 4 16.25 4h-8.5zm4.25 3.25A5 5 0 1 1 7 12a5 5 0 0 1 5-4.75zm0 2A3 3 0 1 0 15 12a3 3 0 0 0-3-2.75zm4.75-.88a1.13 1.13 0 1 1-1.13 1.13 1.13 1.13 0 0 1 1.13-1.13z"/>
+      </svg>
+      Scopri GG84
+    </button>
+
+    <div class="version">GG84_V3_25.04.26</div>
+  </main>
+
+  <script src="script.js"></script>
+  <script src="gg84_ux.js"></script>
+  <script>
+    const welcomeText = document.getElementById("welcomeText");
+    const introScreen = document.getElementById("intro-screen");
+
+    const connectionCard = document.getElementById("connectionCard");
+    const connectionCardTitle = document.getElementById("connectionCardTitle");
+    const connectionCardSubtitle = document.getElementById("connectionCardSubtitle");
+    const connectionHelper = document.getElementById("connectionHelper");
+    const connectionTraffic = document.getElementById("connectionTraffic");
+    const connectionUnlock = document.getElementById("connectionUnlock");
+
+    const openConnectionBtn = document.getElementById("openConnectionBtnHome");
+    const verifyBtnHome = document.getElementById("verifyBtnHome");
+    const messageBtnHome = document.getElementById("messageBtnHome");
+    const disconnectBtnHome = document.getElementById("disconnectBtnHome");
+    const pendingCountdownHome = document.getElementById("pendingCountdownHome");
+    const pendingCountdownText = document.getElementById("pendingCountdownText");
+    let pendingCountdownTimer = null;
+    let pendingCountdownExpiredAlertShown = false;
+
+    const identityCard = document.getElementById("identityCard");
+    const identityStateDot = document.getElementById("identityStateDot");
+    const identityStateText = document.getElementById("identityStateText");
+
+    function setIntroVisibility() {
+      introScreen.classList.add("hide");
+    }
+
+    function setWelcomeText() {
+      const name = (window.getUserName && getUserName()) || "";
+      welcomeText.textContent = name ? `Benvenuto, ${name}` : "Benvenuto";
+    }
+
+    function hasValidIdentityState() {
+      const name = (typeof getUserName === "function" ? getUserName() : "") || "";
+      const pub = (typeof getPublicIdentity === "function" ? getPublicIdentity() : "") || "";
+      const hasWrapped = (typeof hasWrappedPrivateKey === "function" && hasWrappedPrivateKey());
+
+      return !!cleanString(name) && !!cleanString(pub) && !!hasWrapped;
+    }
+
+
+    function hasPendingNativeIncomingFile() {
+      const pendingNative = cleanString(localStorage.getItem("gg84_native_incoming_file_b64") || "");
+      return !!pendingNative;
+    }
+
+    function redirectToChiaveIfNativeFilePending() {
+      if (!hasPendingNativeIncomingFile()) return false;
+      location.replace("chiave.html");
+      return true;
+    }
+
+    function handleInitialRouting() {
+      const introDone = localStorage.getItem("gg84_intro_done") === "1";
+      const onboardingDone = localStorage.getItem("gg84_onboarding_done") === "1";
+      const hasIdentity = hasValidIdentityState();
+
+      if (!introDone) {
+        location.replace("intro.html");
+        return false;
+      }
+
+      if (!hasIdentity) {
+        location.replace("setup.html");
+        return false;
+      }
+
+      if (!onboardingDone) {
+        location.replace("setup.html");
+        return false;
+      }
+
+      return true;
+    }
+
+
+    function updateIdentityCardState() {
+      const ready = hasValidIdentityState();
+
+      identityStateDot.className = `card-helper-dot ${ready ? "dot-green" : "dot-red"}`;
+      identityStateText.textContent = ready
+        ? "Identità pronta"
+        : "Crea identità per usare GG84 SPP";
+
+      identityCard.classList.toggle("disabled", !ready);
+    }
+
+    function goToIdentityArea() {
+      if (hasValidIdentityState()) {
+        location.href = "identita.html";
+        return;
+      }
+
+      location.href = "intro.html";
+    }
+
+    function setTraffic(color) {
+      connectionTraffic.classList.remove("red", "amber", "green");
+      connectionTraffic.classList.add(color);
+    }
+
+    function setMessagesCardDisabled() {
+      if (!messageBtnHome) return;
+      messageBtnHome.style.display = "none";
+      messageBtnHome.textContent = "Scambia messaggi protetti";
+    }
+
+    function setMessagesCardEnabled(peerName = "") {
+      if (!messageBtnHome) return;
+      messageBtnHome.style.display = "inline-flex";
+      messageBtnHome.textContent = peerName
+        ? `Scambia messaggi protetti con ${peerName}`
+        : "Scambia messaggi protetti";
+    }
+
+    function setConnectionCardTone(tone) {
+      connectionCard.classList.remove("card-connection-red", "card-connection-amber", "card-connection-pairing", "card-connection-green");
+      connectionCard.classList.add(`card-connection-${tone}`);
+    }
+
+    function setConnectionHelper(text, dotClass) {
+      connectionHelper.innerHTML = `<span class="card-helper-dot ${dotClass}"></span>${text}`;
+    }
+
+    function setOpenConnectionButton(visible, label = "Apri collegamento") {
+      if (!openConnectionBtn) return;
+      openConnectionBtn.style.display = visible ? "inline-flex" : "none";
+      openConnectionBtn.textContent = label;
+    }
+
+    function hasPendingConnectionState() {
+      const keysToCheck = [
+        GG84.storage.pendingPeerPub,
+        GG84.storage.pendingApprovalLink,
+        GG84.storage.pendingInviteFile,
+        GG84.storage.pendingConfirmFile,
+        GG84.storage.incomingPayload,
+        "gg84_native_incoming_file_b64",
+        "gg84_ui_step",
+        "gg84_ui_incoming_type",
+        "gg84_ui_incoming_name",
+      ];
+
+      const hasStoredMarker = keysToCheck.some(key => {
+        try {
+          return !!cleanString(localStorage.getItem(key) || "");
+        } catch {
+          return false;
+        }
+      });
+
+      const flowState = cleanString(localStorage.getItem(GG84.storage.flowState) || "");
+      const uiStep = cleanString(localStorage.getItem("gg84_ui_step") || "");
+
+      const pendingSteps = new Set([
+        "step-remote-send",
+        "step-remote-wait",
+        "step-remote-receive",
+        "step-remote-send-back",
+        "step-show-first-qr",
+        "step-scan-first-qr",
+        "step-show-second-qr",
+        "step-scan-second-qr"
+      ]);
+
+      return hasStoredMarker ||
+        flowState === "pending" ||
+        flowState === "receive" ||
+        flowState === "confirm" ||
+        pendingSteps.has(uiStep);
+    }
+
+
+    function formatCountdownMs(ms) {
+      const safe = Math.max(0, Number(ms) || 0);
+      const totalSeconds = Math.ceil(safe / 1000);
+      const minutes = String(Math.floor(totalSeconds / 60)).padStart(2, "0");
+      const seconds = String(totalSeconds % 60).padStart(2, "0");
+      return `${minutes}:${seconds}`;
+    }
+
+    function stopPendingCountdown() {
+      if (pendingCountdownTimer) {
+        clearInterval(pendingCountdownTimer);
+        pendingCountdownTimer = null;
+      }
+
+      if (pendingCountdownHome) {
+        pendingCountdownHome.style.display = "none";
+        pendingCountdownHome.classList.remove("warning", "critical", "expired");
+      }
+
+      if (pendingCountdownText) {
+        pendingCountdownText.textContent = "";
+      }
+
+      pendingCountdownExpiredAlertShown = false;
+    }
+
+    function updatePendingCountdown() {
+      if (!pendingCountdownHome) return;
+
+      const createdAt = typeof getPendingPairCreatedAt === "function"
+        ? Number(getPendingPairCreatedAt() || 0)
+        : 0;
+
+      const ttl = (window.GG84 && GG84.pairing && GG84.pairing.pendingTtlMs)
+        ? GG84.pairing.pendingTtlMs
+        : (15 * 60 * 1000);
+
+      if (!createdAt) {
+        pendingCountdownHome.style.display = "none";
+        return;
+      }
+
+      const remaining = ttl - (Date.now() - createdAt);
+      pendingCountdownHome.style.display = "flex";
+      pendingCountdownHome.classList.remove("warning", "critical", "expired");
+
+      if (remaining <= 0) {
+        pendingCountdownHome.classList.add("expired");
+        if (pendingCountdownText) {
+          pendingCountdownText.textContent = "Invito scaduto. Genera un nuovo invito.";
+        } else {
+          pendingCountdownHome.textContent = "Invito scaduto. Genera un nuovo invito.";
+        }
+
+        if (!pendingCountdownExpiredAlertShown) {
+          pendingCountdownExpiredAlertShown = true;
+
+          if (window.GG84UX) {
+            GG84UX.warning("Invito GG84 scaduto", "connectionCard");
+          } else {
+            window.alert("Invito GG84 scaduto. Genera un nuovo invito.");
+          }
+
+          try {
+            clearCurrentConnection();
+          } catch {}
+
+          setTimeout(() => {
+            renderHomeState();
+          }, 250);
+        }
+
+        return;
+      }
+
+      if (remaining <= 60 * 1000) {
+        pendingCountdownHome.classList.add("critical");
+      } else if (remaining <= 3 * 60 * 1000) {
+        pendingCountdownHome.classList.add("warning");
+      }
+
+      const text = `Invito in attesa · scade tra ${formatCountdownMs(remaining)}`;
+      if (pendingCountdownText) {
+        pendingCountdownText.textContent = text;
+      } else {
+        pendingCountdownHome.textContent = text;
+      }
+    }
+
+    function startPendingCountdown() {
+      if (pendingCountdownTimer) {
+        clearInterval(pendingCountdownTimer);
+      }
+
+      pendingCountdownExpiredAlertShown = false;
+      updatePendingCountdown();
+      pendingCountdownTimer = setInterval(updatePendingCountdown, 1000);
+    }
+
+    function setConnectionStateDisconnected() {
+      stopPendingCountdown();
+      connectionCardTitle.textContent = "Collega un contatto";
+      connectionCardSubtitle.textContent = "Instaura un collegamento protetto.";
+      setConnectionHelper("Nessun contatto collegato", "dot-red");
+      connectionUnlock.textContent = "🔓";
+      setTraffic("red");
+      setConnectionCardTone("red");
+
+      setOpenConnectionButton(true, "Apri collegamento");
+      verifyBtnHome.style.display = "none";
+      disconnectBtnHome.style.display = "none";
+      disconnectBtnHome.textContent = "Interrompi connessione sicura GG84";
+
+      setMessagesCardDisabled();
+    }
+
+    function setConnectionStatePending() {
+      startPendingCountdown();
+      connectionCardTitle.textContent = "Connessione in attesa";
+      connectionCardSubtitle.textContent = "Attendere la conferma dell'altro utente. ⚠️ Questo invito scade dopo circa 15 minuti.";
+      setConnectionHelper("In attesa della conferma dell'altro utente", "dot-amber");
+      connectionUnlock.textContent = "🔓";
+      setTraffic("amber");
+      setConnectionCardTone("amber");
+
+      setOpenConnectionButton(false);
+      verifyBtnHome.style.display = "none";
+      disconnectBtnHome.style.display = "inline-flex";
+      disconnectBtnHome.textContent = "Interrompi connessione sicura GG84";
+
+      setMessagesCardDisabled();
+    }
+
+    function setConnectionStateUnverified(activePeer) {
+      stopPendingCountdown();
+      const peerName = activePeer.name || "Contatto";
+      connectionCardTitle.textContent = "Pairing visivo richiesto";
+      connectionCardSubtitle.textContent = `Collegamento con ${peerName}`;
+      setConnectionHelper("Confronta codice e colore prima di fidarti", "dot-green");
+      connectionUnlock.textContent = "🔒";
+      setTraffic("green");
+      setConnectionCardTone("pairing");
+
+      setOpenConnectionButton(false);
+      verifyBtnHome.style.display = "inline-flex";
+      disconnectBtnHome.style.display = "inline-flex";
+      disconnectBtnHome.textContent = `Interrompi connessione sicura GG84 con ${peerName}`;
+
+      setMessagesCardDisabled();
+    }
+
+    async function setConnectionStateVerified(activePeer) {
+      stopPendingCountdown();
+      const peerName = activePeer.name || "Contatto";
+
+      connectionCardTitle.textContent = "Connessione sicura attiva";
+      connectionCardSubtitle.textContent = `Utente collegato: ${peerName}`;
+      setConnectionHelper("Messaggi protetti disponibili", "dot-green");
+      connectionUnlock.textContent = "🔐";
+      setTraffic("green");
+      setConnectionCardTone("green");
+
+      setOpenConnectionButton(false);
+      verifyBtnHome.style.display = "none";
+      disconnectBtnHome.style.display = "inline-flex";
+      disconnectBtnHome.textContent = `Interrompi connessione sicura GG84 con ${peerName}`;
+
+      setMessagesCardEnabled(peerName);
+    }
+
+    async function renderHomeState() {
+      setWelcomeText();
+      updateIdentityCardState();
+      hideVerifyModal();
+
+      const activePeer = getActivePeer();
+      if (activePeer && activePeer.isActive) {
+        if (isActivePeerVerified()) {
+          await setConnectionStateVerified(activePeer);
+          return;
+        }
+
+        setConnectionStateUnverified(activePeer);
+        return;
+      }
+
+      if (hasPendingConnectionState()) {
+        setConnectionStatePending();
+        return;
+      }
+
+      setConnectionStateDisconnected();
+    }
+
+    function goToConnection() {
+      const activePeer = getActivePeer();
+      if (activePeer && activePeer.isActive) {
+        if (window.GG84UX) {
+          GG84UX.warning("Connessione già attiva", "connectionCard");
+        }
+        return;
+      }
+
+      if (hasPendingConnectionState()) {
+        if (window.GG84UX) {
+          GG84UX.warning("Connessione già in attesa", "connectionCard");
+        }
+        return;
+      }
+      location.href = "chiave.html";
+    }
+
+    function goToConnectionFromButton(event) {
+      event.stopPropagation();
+      if (hasPendingConnectionState()) {
+        if (window.GG84UX) {
+          GG84UX.warning("Connessione già in attesa", "connectionCard");
+        }
+        return;
+      }
+      goToConnection();
+    }
+
+    function goToProtectedCommunicationFromButton(event) {
+      if (event) event.stopPropagation();
+      goToProtectedCommunication();
+    }
+
+    function goToProtectedCommunication() {
+      const activePeer = getActivePeer();
+
+      if (!activePeer || !activePeer.isActive) {
+        if (window.GG84UX) {
+          GG84UX.error("Nessun collegamento attivo", "connectionCard");
+        }
+        return;
+      }
+
+      if (!isActivePeerVerified()) {
+        if (window.GG84UX) {
+          GG84UX.warning("Verifica prima il contatto", "connectionCard");
+        }
+        return;
+      }
+
+      if (window.GG84UX) {
+        GG84UX.success("Messaggi protetti attivi", "connectionCard");
+      }
+
+      location.href = "cifra_share.html";
+    }
+
+    function openInstagram() {
+      window.open("https://www.instagram.com/gg84pss", "_blank", "noopener,noreferrer");
+    }
+
+    function getVerifyThemeFromVisualFingerprint(vf) {
+      const normalized = cleanString((vf && vf.fingerprint) || "");
+      const seed = normalized ? parseInt(normalized.slice(0, 2), 16) : 0;
+      const palette = [
+        { name: "Rosso", bg: "#FCEAEA", border: "#E86A6A", glow: "rgba(232,106,106,0.22)" },
+        { name: "Verde", bg: "#EAF9EE", border: "#39E75F", glow: "rgba(57,231,95,0.24)" },
+        { name: "Blu", bg: "#EAF1FF", border: "#4F7CFF", glow: "rgba(79,124,255,0.22)" },
+        { name: "Giallo", bg: "#FFF8DE", border: "#E8C84A", glow: "rgba(232,200,74,0.24)" }
+      ];
+      return palette[seed % 4];
+    }
+
+    function getShortHumanCode(vf) {
+      const base = cleanString((vf && vf.shortCode) || "").replace(/[^A-Z0-9]/gi, "").toUpperCase();
+      if (base.length >= 4) return base.slice(0, 4);
+      return "----";
+    }
+
+    function showVerifyModal() {
+      const modal = document.getElementById("verifyModal");
+      if (modal) modal.classList.add("show");
+    }
+
+    function hideVerifyModal() {
+      const modal = document.getElementById("verifyModal");
+      if (modal) modal.classList.remove("show");
+    }
+
+    function closeVerifyModal(event) {
+      if (!event || event.target === document.getElementById("verifyModal")) {
+        hideVerifyModal();
+      }
+    }
+
+    async function verifyCurrentPeerFromHome(event) {
+      event.stopPropagation();
+
+      const activePeer = getActivePeer();
+      const pendingPeer = (typeof getPendingPeer === "function") ? getPendingPeer() : { pub: "", isPending: false };
+
+      if ((!activePeer || !activePeer.isActive) && pendingPeer && pendingPeer.isPending) {
+        if (window.GG84UX) {
+          GG84UX.warning("Attendere prima la conferma dell'altro utente", "connectionCard");
+        }
+        return;
+      }
+
+      const peerPub = (activePeer && activePeer.isActive) ? activePeer.pub : "";
+
+      if (!peerPub) {
+        if (window.GG84UX) {
+          GG84UX.error("Nessun collegamento attivo", "connectionCard");
+        }
+        return;
+      }
+
+      try {
+        const vf = await buildConnectionVisualFingerprint(peerPub);
+        const theme = getVerifyThemeFromVisualFingerprint(vf);
+        const code = getShortHumanCode(vf);
+
+        const shell = document.getElementById("verifySymbolShell");
+        const colorName = document.getElementById("verifyColorName");
+        const codeEl = document.getElementById("verifyCode");
+        const logo = document.getElementById("verifyLogoImg");
+
+        if (shell) {
+          shell.style.background = theme.bg;
+          shell.style.borderColor = theme.border;
+          shell.style.boxShadow = `0 16px 28px ${theme.glow}`;
+        }
+        if (colorName) colorName.textContent = theme.name;
+        if (codeEl) codeEl.textContent = code;
+        if (logo) {
+          logo.src = "logo3.jpg";
+          logo.onerror = function(){ this.onerror = null; this.src = "logo3.png"; };
+        }
+
+        showVerifyModal();
+      } catch (error) {
+        console.error(error);
+        if (window.GG84UX) {
+          GG84UX.error("Impossibile aprire la verifica", "connectionCard");
+        }
+      }
+    }
+
+    async function confirmVisualVerification() {
+      const activePeer = getActivePeer();
+      const pendingPeer = (typeof getPendingPeer === "function") ? getPendingPeer() : { pub: "", isPending: false };
+
+      if ((!activePeer || !activePeer.isActive) && pendingPeer && pendingPeer.isPending) {
+        activatePendingPeer();
+      }
+
+      markActivePeerAsVerified();
+      hideVerifyModal();
+      await renderHomeState();
+      if (window.GG84UX) {
+        GG84UX.success("Contatto verificato", "connectionCard");
+      }
+    }
+
+    async function rejectVisualVerification() {
+      hideVerifyModal();
+      const ok = window.confirm("Il simbolo non coincide. Vuoi interrompere subito questa connessione sicura GG84?");
+      if (!ok) return;
+
+      clearCurrentConnection();
+      try {
+        if (typeof clearUiFlowArtifacts === "function") {
+          clearUiFlowArtifacts();
+        } else {
+          localStorage.removeItem("gg84_ui_step");
+          localStorage.removeItem("gg84_ui_incoming_type");
+          localStorage.removeItem("gg84_ui_incoming_name");
+          localStorage.removeItem("gg84_ui_remote_invite");
+        }
+      } catch {}
+      await renderHomeState();
+
+      if (window.GG84UX) {
+        GG84UX.warning("Connessione interrotta", "connectionCard");
+      }
+    }
+
+    function openDisconnectModal() {
+      const modal = document.getElementById("disconnectModal");
+      if (modal) modal.classList.add("show");
+    }
+
+    function closeDisconnectModal(event = null) {
+      if (event && event.target !== document.getElementById("disconnectModal")) return;
+      const modal = document.getElementById("disconnectModal");
+      if (modal) modal.classList.remove("show");
+    }
+
+    async function confirmDisconnect() {
+      closeDisconnectModal();
+
+      clearCurrentConnection();
+      try {
+        if (typeof clearUiFlowArtifacts === "function") {
+          clearUiFlowArtifacts();
+        } else {
+          localStorage.removeItem("gg84_ui_step");
+          localStorage.removeItem("gg84_ui_incoming_type");
+          localStorage.removeItem("gg84_ui_incoming_name");
+          localStorage.removeItem("gg84_ui_remote_invite");
+        }
+      } catch {}
+
+      await renderHomeState();
+
+      if (window.GG84UX) {
+        GG84UX.warning("Connessione sicura GG84 terminata", "connectionCard");
+      }
+    }
+
+    async function disconnectAndRestartFromHome(event) {
+      event.stopPropagation();
+      openDisconnectModal();
+    }
+
+    async function boot() {
+      try {
+        await initGG84();
+
+        if (redirectToChiaveIfNativeFilePending()) {
+          return;
+        }
+
+        if (!handleInitialRouting()) {
+          return;
+        }
+
+        setIntroVisibility();
+        await renderHomeState();
+
+        const activePeer = getActivePeer();
+        if (window.GG84UX && activePeer && activePeer.isActive && isActivePeerVerified()) {
+          GG84UX.success("Connessione sicura attiva", "connectionCard");
+        }
+      } catch (error) {
+        console.error(error);
+
+        if (redirectToChiaveIfNativeFilePending()) {
+          return;
+        }
+
+        const canStayOnHome = handleInitialRouting();
+        if (!canStayOnHome) {
+          return;
+        }
+
+        if (redirectToChiaveIfNativeFilePending()) {
+          return;
+        }
+
+        setIntroVisibility();
+        if (window.GG84UX) {
+          GG84UX.error("Errore inizializzazione home", "connectionCard");
+        }
+      }
+    }
+
+    window.addEventListener("gg84-file-open", () => {
+      redirectToChiaveIfNativeFilePending();
+    });
+
+    setupAndroidBackNavigation();
+    boot();
+  </script>
+
+  <div id="disconnectModal" class="verify-modal" onclick="closeDisconnectModal(event)">
+    <div class="verify-modal-card" onclick="event.stopPropagation()">
+      <h3 class="verify-modal-title">Chiudi connessione sicura</h3>
+      <p class="verify-modal-text">Stai per interrompere la connessione sicura GG84.<br><br>Dopo questa operazione, i messaggi scambiati non potranno più essere decifrati all’interno dell’app e la sessione verrà distrutta.<br><br>Vuoi procedere?</p>
+      <div class="verify-modal-actions">
+        <button class="mini-btn danger-soft" type="button" onclick="confirmDisconnect()">Chiudi connessione</button>
+        <button class="mini-btn" type="button" onclick="closeDisconnectModal()">Annulla</button>
+      </div>
+    </div>
+  </div>
+
+
+<script src="pwa-install.js" defer></script>
+</body>
+</html>
